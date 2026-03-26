@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css">
     <style>body { background-color: #060a0d; color: white; }</style>
 </head>
-<body class="pt-24 px-6">
+<body class="pt-24 px-6 pb-12">
     <nav class="fixed top-0 left-0 w-full z-50 bg-[#060a0d]/90 backdrop-blur-md border-b border-teal-900/40 px-6 py-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <a href="index.html" class="flex items-center gap-2">
@@ -25,10 +25,32 @@
         </div>
     </nav>
 
-    <div class="max-w-5xl mx-auto">
-        <div class="bg-teal-900/20 border border-teal-800 rounded-2xl p-8 mb-12">
-            <h1 class="text-4xl font-black mb-4">全天影像觀測</h1>
-            <p class="text-gray-400">利用魚眼鏡頭記錄氣輝、極光及電離層發光現象。</p>
+    <div class="max-w-6xl mx-auto">
+        <div class="bg-teal-900/20 border border-teal-800 rounded-2xl p-8 mb-8">
+            <h1 class="text-4xl font-black mb-4 text-white">全天影像觀測</h1>
+            <p class="text-gray-400">利用魚眼鏡頭記錄氣輝、極光及電離層發光現象。下方為即時觀測影像監測。</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-[#0a1212] p-4 rounded-xl border border-teal-900/40 flex flex-col items-center">
+                <h3 class="text-teal-400 font-bold mb-3 self-start"><i class="ri-broadcast-line mr-2"></i>研究室即時觀測 (全天)</h3>
+                <div class="relative w-full aspect-video bg-black/50 rounded-lg overflow-hidden flex items-center justify-center border border-white/5">
+                    <img id="live-image" src="" class="max-w-full max-height-full object-contain">
+                </div>
+                <p id="status-live" class="text-[10px] mt-3 font-mono text-gray-500 uppercase tracking-widest">
+                    最後同步時間: 載入中...
+                </p>
+            </div>
+
+            <div class="bg-[#0a1212] p-4 rounded-xl border border-teal-900/40 flex flex-col items-center">
+                <h3 class="text-teal-400 font-bold mb-3 self-start"><i class="ri-temp-hot-line mr-2"></i>鹿林天文台觀測</h3>
+                <div class="relative w-full aspect-video bg-black/50 rounded-lg overflow-hidden flex items-center justify-center border border-white/5">
+                    <img id="lulin-allsky" src="https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg" class="max-w-full max-height-full object-contain">
+                </div>
+                <p id="status-lulin" class="text-[10px] mt-3 font-mono text-gray-500 uppercase tracking-widest">
+                    最後同步時間: 載入中...
+                </p>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -42,9 +64,61 @@
             </div>
             <div class="bg-[#0a1212] p-6 rounded-xl border border-teal-900/40">
                 <h3 class="text-xl font-bold mb-4 text-teal-400">設備規格</h3>
-                <p class="text-sm text-gray-400 leading-relaxed">採用科學級冷卻 CCD，視角 180°，支援 557.7/630.0 nm 波長濾鏡，捕捉微弱大氣輻射。</p>
+                <p class="text-sm text-gray-400 leading-relaxed">採用科學級冷卻 CCD，視角 180°，支援 557.7/630.0 nm 波長濾鏡，捕捉微弱大氣輻射，為電離層擾動研究提供關鍵數據。</p>
             </div>
         </div>
     </div>
+
+    <script>
+        // 設定區
+        const webAppUrl = "https://script.google.com/macros/s/AKfycbxHVefdwt1XABlPMrLags4BOAJop1UNZaVARvR5DnsSzbN9NiYmsusAufet3jEbwpPs/exec";
+        const lulinBaseUrl = "https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg";
+
+        // 1. 更新研究室影像
+        function updateLiveImage() {
+            const imgElement = document.getElementById('live-image');
+            const statusElement = document.getElementById('status-live');
+            
+            fetch(webAppUrl + "?t=" + new Date().getTime())
+                .then(response => response.text())
+                .then(base64 => {
+                    if (!base64.startsWith("Error")) {
+                        imgElement.src = "data:image/jpeg;base64," + base64;
+                        statusElement.innerText = "最後同步時間: " + getNowTime();
+                        statusElement.style.color = "#2ecc71"; 
+                    } else {
+                        statusElement.innerText = "API 存取錯誤";
+                        statusElement.style.color = "#e74c3c";
+                    }
+                })
+                .catch(() => {
+                    statusElement.innerText = "連線失敗";
+                    statusElement.style.color = "#e74c3c";
+                });
+        }
+
+        // 2. 更新鹿林影像
+        function refreshLulinImage() {
+            const img = document.getElementById('lulin-allsky');
+            const status = document.getElementById('status-lulin');
+            img.src = lulinBaseUrl + "?t=" + new Date().getTime();
+            status.innerText = "最後同步時間: " + getNowTime();
+            status.style.color = "#2ecc71";
+        }
+
+        // 工具：取得目前時間字串
+        function getNowTime() {
+            const now = new Date();
+            return now.getHours() + ":" + 
+                   (now.getMinutes() < 10 ? '0' : '') + now.getMinutes() + ":" + 
+                   (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
+        }
+
+        // 初始化與定時器
+        updateLiveImage();
+        refreshLulinImage();
+        setInterval(updateLiveImage, 10000);   // 研究室 10秒
+        setInterval(refreshLulinImage, 30000); // 鹿林 30秒
+    </script>
 </body>
 </html>
