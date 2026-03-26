@@ -1,0 +1,26 @@
+<div style="text-align: center;">
+  <img id="lulin-allsky" src="https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg" style="width: 100%; max-width: 800px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <p id="update-status" style="color: #666; font-family: sans-serif; font-size: 12px; margin-top: 5px;">最後同步時間: 載入中...</p>
+</div>
+
+<script>
+  function refreshLulinImage() {
+    var img = document.getElementById('lulin-allsky');
+    var status = document.getElementById('update-status');
+    var baseUrl = "https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg";
+    
+    // 加上隨機時間戳記，確保瀏覽器不會拿舊的暫存檔
+    var timestamp = new Date().getTime();
+    img.src = baseUrl + "?t=" + timestamp;
+    
+    // 更新網頁上的文字，讓你知道它有在動
+    var now = new Date();
+    status.innerText = "最後同步時間: " + now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes() + ":" + (now.getSeconds()<10?'0':'') + now.getSeconds();
+  }
+
+  // 每 30 秒更新一次 (鹿林天文台的更新頻率通常沒那麼快，30秒~1分鐘就很夠了)
+  setInterval(refreshLulinImage, 30000);
+  
+  // 網頁開啟時先更新一次狀態
+  refreshLulinImage();
+</script>
