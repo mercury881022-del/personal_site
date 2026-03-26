@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>太空天氣研究室 | 全天影像觀測</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css">
+    <style>body { background-color: #060a0d; color: white; }</style>
+</head>
+<body class="pt-24 px-6">
+    <nav class="fixed top-0 left-0 w-full z-50 bg-[#060a0d]/90 backdrop-blur-md border-b border-teal-900/40 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2">
+                <img src="https://public.readdy.ai/ai/img_res/f4897f5b-3554-4f1f-8862-12da2085430e.png" class="w-8 h-8">
+                <span class="font-bold">Space Weather Lab</span>
+            </a>
+            <div class="flex gap-6 text-sm">
+                <a href="index.html" class="text-gray-300 hover:text-teal-400">首頁</a>
+                <a href="imaging.html" class="text-teal-400">全天影像</a>
+                <a href="satellite.html" class="text-gray-300">衛星掩星</a>
+                <a href="gps.html" class="text-gray-300">現地GPS</a>
+                <a href="rocket.html" class="text-gray-300">火箭資訊</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-5xl mx-auto">
+        <div class="bg-teal-900/20 border border-teal-800 rounded-2xl p-8 mb-12">
+            <h1 class="text-4xl font-black mb-4">全天影像觀測</h1>
+            <p class="text-gray-400">利用魚眼鏡頭記錄氣輝、極光及電離層發光現象。</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-[#0a1212] p-6 rounded-xl border border-teal-900/40">
+                <h3 class="text-xl font-bold mb-4 text-teal-400">觀測站點</h3>
+                <ul class="space-y-3 text-sm text-gray-300">
+                    <li class="flex justify-between border-b border-teal-900/20 pb-2"><span>中壢觀測站</span><span class="text-teal-500">運作中</span></li>
+                    <li class="flex justify-between border-b border-teal-900/20 pb-2"><span>屏東觀測站</span><span class="text-teal-500">運作中</span></li>
+                    <li class="flex justify-between pb-2"><span>花蓮觀測站</span><span class="text-amber-500">維護中</span></li>
+                </ul>
+            </div>
+            <div class="bg-[#0a1212] p-6 rounded-xl border border-teal-900/40">
+                <h3 class="text-xl font-bold mb-4 text-teal-400">設備規格</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">採用科學級冷卻 CCD，視角 180°，支援 557.7/630.0 nm 波長濾鏡，捕捉微弱大氣輻射。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

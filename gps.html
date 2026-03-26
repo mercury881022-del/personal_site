@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>太空天氣研究室 | 現地量測與 GPS 分析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css">
+    <style>body { background-color: #060a0d; color: white; font-family: sans-serif; }</style>
+</head>
+<body class="pt-24 px-6">
+    <nav class="fixed top-0 left-0 w-full z-50 bg-[#060a0d]/90 backdrop-blur-md border-b border-teal-900/40 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2">
+                <span class="font-bold tracking-tight">Space Weather Lab</span>
+            </a>
+            <div class="flex gap-6 text-sm text-gray-300">
+                <a href="index.html" class="hover:text-teal-400 transition">首頁</a>
+                <a href="imaging.html" class="hover:text-teal-400 transition">全天影像</a>
+                <a href="satellite.html" class="hover:text-teal-400 transition">衛星掩星</a>
+                <a href="gps.html" class="text-teal-400">現地GPS</a>
+                <a href="rocket.html" class="hover:text-teal-400 transition">火箭資訊</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-4xl font-black mb-8">📡 現地量測與 GPS 分析</h1>
+
+        <div class="bg-[#0a1212] border border-amber-900/30 rounded-xl p-6 mb-10">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-white font-bold text-lg">GPS 測站即時 TEC 監測</h2>
+                <span class="text-xs text-amber-400 animate-pulse flex items-center gap-1">
+                    <i class="ri-broadcast-line"></i> 即時狀態
+                </span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-gray-300">
+                    <thead class="border-b border-gray-800 text-gray-500 uppercase text-xs">
+                        <tr>
+                            <th class="pb-3">測站名稱</th>
+                            <th class="pb-3">座標</th>
+                            <th class="pb-3">VTEC (全電子含量)</th>
+                            <th class="pb-3">狀態</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800">
+                        <tr><td class="py-4 font-semibold text-white">TWTF</td><td class="py-4">24.95°N, 121.17°E</td><td class="py-4 text-teal-400">22.3 TECU</td><td><span class="bg-teal-900/30 text-teal-400 px-2 py-0.5 rounded text-xs">正常</span></td></tr>
+                        <tr><td class="py-4 font-semibold text-white">PKGM</td><td class="py-4">22.02°N, 120.74°E</td><td class="py-4 text-amber-400">25.2 TECU</td><td><span class="bg-amber-900/30 text-amber-400 px-2 py-0.5 rounded text-xs">輕微擾動</span></td></tr>
+                        <tr><td class="py-4 font-semibold text-white">ILAN</td><td class="py-4">24.75°N, 121.75°E</td><td class="py-4 text-teal-400">22.5 TECU</td><td><span class="bg-teal-900/30 text-teal-400 px-2 py-0.5 rounded text-xs">正常</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-[#0f1a1a] p-5 rounded-xl border border-teal-900/40">
+                <i class="ri-pulse-line text-teal-400 text-2xl mb-2"></i>
+                <h3 class="font-bold text-white mb-2">電離層測高儀</h3>
+                <p class="text-xs text-gray-500">透過垂直發射無線電波，獲取電離層層狀結構與臨界頻率。</p>
+            </div>
+            <div class="bg-[#0f1a1a] p-5 rounded-xl border border-teal-900/40">
+                <i class="ri-signal-tower-line text-teal-400 text-2xl mb-2"></i>
+                <h3 class="font-bold text-white mb-2">閃爍監測儀</h3>
+                <p class="text-xs text-gray-500">監測 GPS 訊號振幅與相位的快速起伏，定位電漿泡分布。</p>
+            </div>
+            <div class="bg-[#0f1a1a] p-5 rounded-xl border border-teal-900/40">
+                <i class="ri-map-pin-2-line text-teal-400 text-2xl mb-2"></i>
+                <h3 class="font-bold text-white mb-2">CORS 網路分析</h3>
+                <p class="text-xs text-gray-500">利用全台稠密測站，建構高解析度 TEC 二維地圖。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
