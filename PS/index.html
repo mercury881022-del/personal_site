@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>太空天氣研究室 | 首頁</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css">
+    <style>
+        body { background-color: #060a0d; color: white; font-family: sans-serif; }
+        .text-gradient { background: linear-gradient(to right, #2dd4bf, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body>
+    <nav class="fixed top-0 w-full z-50 bg-[#060a0d]/90 backdrop-blur-md border-b border-teal-900/40 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2">
+                <img src="https://public.readdy.ai/ai/img_res/f4897f5b-3554-4f1f-8862-12da2085430e.png" class="w-8 h-8">
+                <span class="font-bold tracking-tight text-sm md:text-base">Space Weather Lab</span>
+            </a>
+            <div class="hidden md:flex gap-6 text-sm text-gray-300">
+                <a href="index.html" class="text-teal-400">首頁</a>
+                <a href="imaging.html" class="hover:text-teal-400">全天影像</a>
+                <a href="satellite.html" class="hover:text-teal-400">衛星掩星</a>
+                <a href="gps.html" class="hover:text-teal-400">現地GPS</a>
+                <a href="rocket.html" class="hover:text-teal-400">火箭資訊</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative h-screen flex items-center justify-center text-center px-6 overflow-hidden">
+        <img src="https://readdy.ai/api/search-image?query=space%20weather%20aurora%20borealis%20Earth%20orbit&width=1920&height=1080" class="absolute inset-0 w-full h-full object-cover opacity-40">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#060a0d]"></div>
+        <div class="relative z-10 max-w-4xl">
+            <h1 class="text-5xl md:text-7xl font-black mb-6">太空天氣 <span class="text-gradient">研究實驗室</span></h1>
+            <p class="text-gray-300 text-lg mb-8">透過多維度觀測技術，深入探索電離層動態與太空環境變化。</p>
+            <div class="flex justify-center gap-4">
+                <a href="imaging.html" class="bg-teal-500 text-black px-8 py-3 rounded-full font-bold hover:bg-teal-400 transition">探索研究成果</a>
+                <a href="rocket.html" class="border border-teal-700 text-teal-300 px-8 py-3 rounded-full hover:bg-teal-900/30 transition">即時火箭資訊</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-16 bg-[#0a1212] border-y border-teal-900/30">
+        <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 px-6">
+            <div class="text-center"><div class="text-teal-400 text-3xl font-black">8+</div><div class="text-gray-400 text-sm">年研究經驗</div></div>
+            <div class="text-center"><div class="text-teal-400 text-3xl font-black">500+</div><div class="text-gray-400 text-sm">觀測數據集</div></div>
+            <div class="text-center"><div class="text-teal-400 text-3xl font-black">30+</div><div class="text-gray-400 text-sm">學術發表</div></div>
+            <div class="text-center"><div class="text-teal-400 text-3xl font-black">10+</div><div class="text-gray-400 text-sm">國際合作</div></div>
+        </div>
+    </section>
+</body>
+</html>
