@@ -1,22 +1,31 @@
 // assets/js/main.js
 
+// --- 1. 統一入口：當頁面載入完成後執行 ---
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("📍 目前頁面路徑:", window.location.pathname);
+    console.log("🚀 太空天氣系統啟動... 頁面路徑:", window.location.pathname);
+    
+    // 渲染導覽列
     renderNavbar();
     
+    // 偵測：如果有影像監測容器，啟動影像邏輯
     if (document.getElementById('live-image')) {
         initImagingLogic();
     }
+    
+    // 偵測：如果有火箭清單容器，啟動火箭渲染
+    if (document.getElementById('casc-mission-list')) {
+        // 你可以選擇執行 renderCASCMissions() [用寫死的資料] 
+        // 或是執行 fetchRocketData() [用 API 自動抓取]
+        renderCASCMissions(); 
+    }
 });
 
+// --- 2. 導覽列渲染功能 ---
 function renderNavbar() {
     const navPlaceholder = document.getElementById('navbar-placeholder');
     if (!navPlaceholder) return;
 
-    // 判斷是否在 pages 資料夾內（不論是本地還是 Vercel）
-    const isInsidePages = window.location.pathname.toLowerCase().includes('/pages/');
-    
-    // 使用「絕對路徑」(/ 開頭)，這樣不論你在哪一層，連結都不會連錯
+    // 使用絕對路徑，確保 Vercel 上路徑不會出錯
     const rootPath = "/index.html";
     const imagingPath = "/pages/imaging.html";
     const satellitePath = "/pages/satellite.html";
@@ -42,83 +51,76 @@ function renderNavbar() {
     </nav>`;
 }
 
-// assets/js/main.js 內容更新
-
+// --- 3. 火箭資料渲染功能 (使用寫死資料) ---
 const cascMissions = [
-    {
-        name: "長征八號 (Long March 8)",
-        payload: "未知載荷 (Unknown Payload)",
-        date: "2026-04-07",
-        site: "文昌航天發射場",
-        status: "success", // 剛完成
-        type: "應用發射"
-    },
-    {
-        name: "長征六號改 (Long March 6A)",
-        payload: "未知載荷 (Unknown Payload)",
-        date: "2026-04-08",
-        site: "太原衛星發射中心",
-        status: "upcoming", // 即將進行
-        type: "應用發射"
-    },
-    {
-        name: "長征二號 F/G (Shenzhou 23)",
-        payload: "神舟二十三號載人飛船",
-        date: "2026-06 (預計)",
-        site: "酒泉衛星發射中心",
-        status: "pending",
-        type: "載人任務"
-    },
-    {
-        name: "長征五號 (Chang'e 7)",
-        payload: "嫦娥七號探測器",
-        date: "2026 (年度重點)",
-        site: "文昌航天發射場",
-        status: "pending",
-        type: "深空探測"
-    }
+    { name: "長征八號 (Long March 8)", payload: "未知載荷", date: "2026-04-07", site: "文昌", status: "success" },
+    { name: "長征六號改 (Long March 6A)", payload: "未知載荷", date: "2026-04-08", site: "太原", status: "upcoming" },
+    { name: "神舟二十三號", payload: "載人飛船", date: "2026-06", site: "酒泉", status: "pending" },
+    { name: "嫦娥七號", payload: "探測器", date: "2026", site: "文昌", status: "pending" }
 ];
 
-// 在 DOMContentLoaded 裡調用渲染
-document.addEventListener('DOMContentLoaded', () => {
-    renderNavbar();
-    if (document.getElementById('casc-mission-list')) {
-        renderCASCMissions();
-    }
-});
+function renderCASCMissions() {
+    const list = document.getElementById('casc-mission-list');
+    if (!list) return;
 
-// assets/js/main.js 
+    list.innerHTML = cascMissions.map(m => `
+        <div class="bg-[#0a1212] p-5 rounded-xl border ${m.status === 'upcoming' ? 'border-orange-500/50' : 'border-teal-900/40'} flex justify-between items-center mb-4">
+            <div>
+                <h3 class="font-bold text-white text-lg">${m.name}</h3>
+                <p class="text-xs text-gray-400">載荷：${m.payload} | 地點：${m.site}</p>
+            </div>
+            <div class="text-right">
+                <div class="text-sm font-mono text-gray-300 mb-2">${m.date}</div>
+                ${getStatusBadge(m.status)}
+            </div>
+        </div>
+    `).join('');
+}
 
+// --- 4. 自動抓取 API (進階預留) ---
 async function fetchRocketData() {
     const list = document.getElementById('casc-mission-list');
-    
     try {
-        // 呼叫國際公用的發射資料 API (範例：The Space Devs)
-        // 這裡設定搜尋：CASC (中國航天科技集團)
         const response = await fetch('https://lldev.thespacedevs.com/2.2.0/launch/upcoming/?search=CASC');
         const data = await response.json();
-        
-        const missions = data.results.map(m => ({
-            name: m.name,
-            payload: m.mission ? m.mission.name : "未知酬載",
-            date: new Date(m.net).toLocaleDateString(),
-            site: m.pad.location.name,
-            status: "upcoming"
-        }));
-
-        renderUI(missions); // 把抓到的資料餵給你的畫頁面
+        // 如果想切換成 API，這裡需要另外寫渲染 logic (renderUI)
+        console.log("API 資料抓取成功", data);
     } catch (error) {
         console.error("抓取失敗:", error);
-        list.innerHTML = "<p class='text-red-400'>無法即時更新，請檢查網路連線。</p>";
     }
 }
 
+// --- 5. 輔助功能：狀態標籤 ---
 function getStatusBadge(status) {
     if (status === 'success') return '<span class="text-[10px] bg-teal-900/40 text-teal-300 border border-teal-500/30 px-2 py-1 rounded-full">發射成功</span>';
     if (status === 'upcoming') return '<span class="text-[10px] bg-orange-900/40 text-orange-300 border border-orange-500/30 px-2 py-1 rounded-full animate-pulse">即將發射</span>';
     return '<span class="text-[10px] bg-gray-800 text-gray-400 px-2 py-1 rounded-full">準備中</span>';
 }
-// 影像更新邏輯 (維持不變)
+
+// --- 6. 影像更新邏輯 ---
 function initImagingLogic() {
-    // ... 原本的影像更新代碼 ...
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbxHVefdwt1XABlPMrLags4BOAJop1UNZaVARvR5DnsSzbN9NiYmsusAufet3jEbwpPs/exec";
+    const lulinBaseUrl = "https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg";
+
+    function updateLiveImage() {
+        const img = document.getElementById('live-image');
+        const status = document.getElementById('status-live');
+        if (!img) return;
+        fetch(webAppUrl + "?t=" + new Date().getTime())
+            .then(res => res.text())
+            .then(base64 => {
+                if (!base64.startsWith("Error")) {
+                    img.src = "data:image/jpeg;base64," + base64;
+                    status.innerText = "最後同步時間: " + getNowTime();
+                }
+            });
+    }
+
+    function getNowTime() {
+        const now = new Date();
+        return now.getHours() + ":" + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes() + ":" + (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
+    }
+
+    updateLiveImage();
+    setInterval(updateLiveImage, 10000);
 }
