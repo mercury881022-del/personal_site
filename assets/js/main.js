@@ -202,7 +202,7 @@ function initImagingLogic() {
     // 1. 各站點的基礎 URL
     const webAppUrl = "https://script.google.com/macros/s/AKfycbxHVefdwt1XABlPMrLags4BOAJop1UNZaVARvR5DnsSzbN9NiYmsusAufet3jEbwpPs/exec";
     const lulinUrl = "https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg";
-    const alaskaUrl = "https://allsky.gi.alaska.edu/PKR/latest-eye.jpg";
+    const alaskaUrl = "https://allsky.gi.alaska.edu/TOO/latest-eye.jpg";
 
     function updateImages() {
         const now = new Date();
