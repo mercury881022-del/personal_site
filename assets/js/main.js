@@ -87,26 +87,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function renderCASCMissions() {
+// assets/js/main.js 
+
+async function fetchRocketData() {
     const list = document.getElementById('casc-mission-list');
-    list.innerHTML = cascMissions.map(m => `
-        <div class="bg-[#0a1212] p-5 rounded-xl border ${m.status === 'upcoming' ? 'border-orange-500/50' : 'border-teal-900/40'} flex justify-between items-center transition hover:scale-[1.01]">
-            <div class="flex items-start gap-4">
-                <div class="p-3 rounded-lg bg-teal-900/20 text-teal-400">
-                    <i class="ri-rocket-fill text-2xl"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-white text-lg">${m.name}</h3>
-                    <p class="text-xs text-gray-400">載荷：${m.payload}</p>
-                    <p class="text-[10px] text-gray-500 mt-1"><i class="ri-map-pin-2-line"></i> ${m.site}</p>
-                </div>
-            </div>
-            <div class="text-right">
-                <div class="text-sm font-mono text-gray-300 mb-2">${m.date}</div>
-                ${getStatusBadge(m.status)}
-            </div>
-        </div>
-    `).join('');
+    
+    try {
+        // 呼叫國際公用的發射資料 API (範例：The Space Devs)
+        // 這裡設定搜尋：CASC (中國航天科技集團)
+        const response = await fetch('https://lldev.thespacedevs.com/2.2.0/launch/upcoming/?search=CASC');
+        const data = await response.json();
+        
+        const missions = data.results.map(m => ({
+            name: m.name,
+            payload: m.mission ? m.mission.name : "未知酬載",
+            date: new Date(m.net).toLocaleDateString(),
+            site: m.pad.location.name,
+            status: "upcoming"
+        }));
+
+        renderUI(missions); // 把抓到的資料餵給你的畫頁面
+    } catch (error) {
+        console.error("抓取失敗:", error);
+        list.innerHTML = "<p class='text-red-400'>無法即時更新，請檢查網路連線。</p>";
+    }
 }
 
 function getStatusBadge(status) {
