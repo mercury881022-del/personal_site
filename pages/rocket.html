@@ -12,28 +12,41 @@
 
     
 
-    <div class="max-w-5xl mx-auto">
-        <h1 class="text-4xl font-black mb-8">🚀 火箭發射資訊</h1>
-        <div class="space-y-4">
-            <div class="bg-[#0a1212] p-6 rounded-xl border border-orange-900/40 flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold">ISRO PSLV-C61</h3>
-                    <p class="text-xs text-gray-500">Payload: EOS-09 Satellite</p>
-                </div>
-                <div class="text-right">
-                    <div class="text-sm font-bold text-orange-400">2026-03-28</div>
-                    <span class="text-[10px] bg-orange-900/40 text-orange-300 px-2 py-1 rounded-full">即將發射</span>
-                </div>
+    <div class="max-w-5xl mx-auto py-12">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-4xl font-black italic tracking-tighter">ROCKET <span class="text-teal-400">MONITOR</span></h1>
+            <div class="text-xs text-gray-500 bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                Source: CASC Official / RocketLaunch.org
             </div>
-            <div class="bg-[#0a1212] p-6 rounded-xl border border-teal-900/40 flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold">S-520-33</h3>
-                    <p class="text-xs text-gray-500">電離層探空實驗 (Japan)</p>
-                </div>
-                <div class="text-right">
-                    <div class="text-sm font-bold text-teal-400">2026-03-25</div>
-                    <span class="text-[10px] bg-teal-900/40 text-teal-300 px-2 py-1 rounded-full">發射成功</span>
-                </div>
+        </div>
+
+        <div class="mb-12">
+            <div class="flex items-center gap-2 mb-6">
+                <span class="w-2 h-6 bg-teal-500"></span>
+                <h2 class="text-xl font-bold">CASC 中國航天科技集團 - 發射時程</h2>
+            </div>
+            
+            <div id="casc-mission-list" class="grid gap-4">
+                <p class="text-gray-500 animate-pulse text-sm">正在獲取最新發射窗口數據...</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gradient-to-br from-[#0a1212] to-black border border-teal-900/30 p-6 rounded-2xl">
+                <h3 class="text-teal-400 font-bold mb-4 flex items-center gap-2">
+                    <i class="ri-temp-hot-line"></i> 軌道大氣密度預警
+                </h3>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    近期太陽活動增強，低軌道 (LEO) 大氣阻力預計增加 15%。針對長征六號改等 LEO 任務，需密切追蹤衛星入軌後之軌道衰減情況。
+                </p>
+            </div>
+            <div class="bg-gradient-to-br from-[#0a1212] to-black border border-teal-900/30 p-6 rounded-2xl">
+                <h3 class="text-teal-400 font-bold mb-4 flex items-center gap-2">
+                    <i class="ri-radar-line"></i> 通訊閃爍風險 (S4 Index)
+                </h3>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    今日太原發射中心上空電離層穩定，S4 預計低於 0.2，對火箭遙測訊號與 GPS 指引無顯著影響。
+                </p>
             </div>
         </div>
     </div>

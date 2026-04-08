@@ -42,6 +42,78 @@ function renderNavbar() {
     </nav>`;
 }
 
+// assets/js/main.js 內容更新
+
+const cascMissions = [
+    {
+        name: "長征八號 (Long March 8)",
+        payload: "未知載荷 (Unknown Payload)",
+        date: "2026-04-07",
+        site: "文昌航天發射場",
+        status: "success", // 剛完成
+        type: "應用發射"
+    },
+    {
+        name: "長征六號改 (Long March 6A)",
+        payload: "未知載荷 (Unknown Payload)",
+        date: "2026-04-08",
+        site: "太原衛星發射中心",
+        status: "upcoming", // 即將進行
+        type: "應用發射"
+    },
+    {
+        name: "長征二號 F/G (Shenzhou 23)",
+        payload: "神舟二十三號載人飛船",
+        date: "2026-06 (預計)",
+        site: "酒泉衛星發射中心",
+        status: "pending",
+        type: "載人任務"
+    },
+    {
+        name: "長征五號 (Chang'e 7)",
+        payload: "嫦娥七號探測器",
+        date: "2026 (年度重點)",
+        site: "文昌航天發射場",
+        status: "pending",
+        type: "深空探測"
+    }
+];
+
+// 在 DOMContentLoaded 裡調用渲染
+document.addEventListener('DOMContentLoaded', () => {
+    renderNavbar();
+    if (document.getElementById('casc-mission-list')) {
+        renderCASCMissions();
+    }
+});
+
+function renderCASCMissions() {
+    const list = document.getElementById('casc-mission-list');
+    list.innerHTML = cascMissions.map(m => `
+        <div class="bg-[#0a1212] p-5 rounded-xl border ${m.status === 'upcoming' ? 'border-orange-500/50' : 'border-teal-900/40'} flex justify-between items-center transition hover:scale-[1.01]">
+            <div class="flex items-start gap-4">
+                <div class="p-3 rounded-lg bg-teal-900/20 text-teal-400">
+                    <i class="ri-rocket-fill text-2xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white text-lg">${m.name}</h3>
+                    <p class="text-xs text-gray-400">載荷：${m.payload}</p>
+                    <p class="text-[10px] text-gray-500 mt-1"><i class="ri-map-pin-2-line"></i> ${m.site}</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-sm font-mono text-gray-300 mb-2">${m.date}</div>
+                ${getStatusBadge(m.status)}
+            </div>
+        </div>
+    `).join('');
+}
+
+function getStatusBadge(status) {
+    if (status === 'success') return '<span class="text-[10px] bg-teal-900/40 text-teal-300 border border-teal-500/30 px-2 py-1 rounded-full">發射成功</span>';
+    if (status === 'upcoming') return '<span class="text-[10px] bg-orange-900/40 text-orange-300 border border-orange-500/30 px-2 py-1 rounded-full animate-pulse">即將發射</span>';
+    return '<span class="text-[10px] bg-gray-800 text-gray-400 px-2 py-1 rounded-full">準備中</span>';
+}
 // 影像更新邏輯 (維持不變)
 function initImagingLogic() {
     // ... 原本的影像更新代碼 ...
