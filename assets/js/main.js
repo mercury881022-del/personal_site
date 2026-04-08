@@ -195,29 +195,64 @@ function getStatusBadge(time) {
     return '<span class="text-[10px] bg-gray-800 text-gray-400 px-2 py-1 rounded-full">排程中</span>';
 }
 
-// --- 6. 影像更新邏輯 ---
+// assets/js/main.js
+
+// --- 6. 影像自動更新邏輯 (全面同步版) ---
 function initImagingLogic() {
+    // 1. 各站點的基礎 URL
     const webAppUrl = "https://script.google.com/macros/s/AKfycbxHVefdwt1XABlPMrLags4BOAJop1UNZaVARvR5DnsSzbN9NiYmsusAufet3jEbwpPs/exec";
-    
-    function updateLiveImage() {
-        const img = document.getElementById('live-image');
-        const status = document.getElementById('status-live');
-        if (!img) return;
-        fetch(webAppUrl + "?t=" + new Date().getTime())
-            .then(res => res.text())
-            .then(base64 => {
-                if (!base64.startsWith("Error")) {
-                    img.src = "data:image/jpeg;base64," + base64;
-                    status.innerText = "最後同步時間: " + getNowTime();
-                }
-            });
+    const lulinUrl = "https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg";
+    const alaskaUrl = "https://allsky.gi.alaska.edu/PKR/latest-eye.jpg";
+
+    function updateImages() {
+        const now = new Date();
+        const timestamp = now.getTime(); // 產生一串唯一的數字，強迫瀏覽器抓新圖
+        const timeDisplay = getNowTime();
+
+        // --- A. 研究室 (Base64 格式，需透過 GAS 抓取) ---
+        const liveImg = document.getElementById('live-image');
+        const liveStatus = document.getElementById('status-live');
+        if (liveImg) {
+            fetch(webAppUrl + "?t=" + timestamp)
+                .then(res => res.text())
+                .then(base64 => {
+                    if (!base64.startsWith("Error")) {
+                        liveImg.src = "data:image/jpeg;base64," + base64;
+                        if (liveStatus) liveStatus.innerText = "最後同步: " + timeDisplay;
+                    }
+                })
+                .catch(err => console.error("研究室影像抓取失敗", err));
+        }
+
+        // --- B. 鹿林天文台 (直接 URL 格式) ---
+        const lulinImg = document.getElementById('lulin-allsky');
+        const lulinStatus = document.getElementById('status-lulin');
+        if (lulinImg) {
+            lulinImg.src = lulinUrl + "?t=" + timestamp;
+            if (lulinStatus) lulinStatus.innerText = "最後同步: " + timeDisplay;
+        }
+
+        // --- C. 阿拉斯加 Poker Flat (直接 URL 格式) ---
+        const pokerImg = document.getElementById('pokerflat-allsky');
+        if (pokerImg) {
+            pokerImg.src = alaskaUrl + "?t=" + timestamp;
+            // 如果你在 Alaska 區塊也有加 status 元素，可以在此更新
+        }
+        
+        console.log(`✨ 全域影像同步完成 @ ${timeDisplay}`);
     }
 
     function getNowTime() {
         const now = new Date();
-        return now.getHours() + ":" + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes() + ":" + (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
+        return now.getHours().toString().padStart(2, '0') + ":" + 
+               now.getMinutes().toString().padStart(2, '0') + ":" + 
+               now.getSeconds().toString().padStart(2, '0');
     }
 
-    updateLiveImage();
-    setInterval(updateLiveImage, 10000);
+    // 啟動後立刻執行一次
+    updateImages();
+
+    // 設定定時重整頻率
+    // 研究室建議 10-20 秒一次；鹿林/阿拉斯加建議 60 秒一次避免被封鎖 IP
+    setInterval(updateImages, 30000); // 這裡統一設定 30 秒更新一次
 }
