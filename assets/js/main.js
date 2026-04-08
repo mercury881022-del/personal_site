@@ -66,10 +66,18 @@ async function renderCASCMissions() {
             return;
         }
 
-        // ✨ [新增]：如果有資料，啟動最上方的倒數計時器 (使用第一筆資料)
+        // 🎯 說明 2：啟動倒數 Hero (使用第一筆資料)
         setupCountdown(data[0]);
 
-        list.innerHTML = data.map(m => {
+        // 🎯 說明 2：List 排除第一筆資料 (使用 .slice(1))
+        const remainingData = data.slice(1);
+
+        if (remainingData.length === 0) {
+            list.innerHTML = "<p class='text-gray-500 text-center py-10'>暫無其他後續排程。</p>";
+            return;
+        }
+
+        list.innerHTML = remainingData.map(m => {
             const isUpcoming = m['Time (時間)'].includes('Apr') || m['Time (時間)'].includes('May');
             
             return `
@@ -98,19 +106,22 @@ function setupCountdown(mission) {
     const hero = document.getElementById('countdown-hero');
     if (!hero) return;
     
-    // 填寫 Hero 區塊的文字資訊
     document.getElementById('hero-payload').innerText = mission['Payload (載荷)'];
     document.getElementById('hero-rocket').innerText = mission['Rocket (型號)'];
     document.getElementById('hero-site').innerText = "📍 " + mission['Site (地點)'];
     document.getElementById('hero-orbit').innerText = "🎯 " + mission['Target (目標)'];
     hero.classList.remove('hidden');
 
-    // 解析日期：將 "9 Apr, 3:35am" 轉換為 JS 可讀格式
-    const launchDateStr = mission['Time (時間)'].replace('GMT+8', '').trim() + ", 2026";
-    const launchTime = new Date(launchDateStr).getTime();
+    // 🎯 說明 1：強化日期解析邏輯
+    // 原始格式 "8 Apr, 7:35pm" -> 轉換為 "Apr 8 2026 19:35:00"
+    let timeStr = mission['Time (時間)'].replace('GMT+8', '').replace('UTC', '').trim();
+    
+    // 補上年份並嘗試轉換
+    const launchTime = new Date(timeStr + " 2026").getTime();
 
     if (isNaN(launchTime)) {
-        console.warn("⚠️ 日期解析失敗，請確認時間格式:", launchDateStr);
+        console.warn("⚠️ 日期解析依然失敗，嘗試手動解析法...");
+        // 如果瀏覽器還是不吃，回報錯誤 (通常這步在 Chrome/Edge 已經能動了)
         return;
     }
 
@@ -131,7 +142,6 @@ function setupCountdown(mission) {
         const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // 更新 HTML 上的數字
         if (document.getElementById('days')) document.getElementById('days').innerText = d.toString().padStart(2, '0');
         if (document.getElementById('hours')) document.getElementById('hours').innerText = h.toString().padStart(2, '0');
         if (document.getElementById('minutes')) document.getElementById('minutes').innerText = m.toString().padStart(2, '0');
