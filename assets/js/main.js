@@ -105,70 +105,66 @@ function setupCountdown(mission) {
     const hero = document.getElementById('countdown-hero');
     if (!hero) return;
     
-    // --- 1. 定義手動解析與時區轉換函式 ---
-    function parseToGMT8(dateStr) {
+    const rawTimeStr = mission['Time (時間)']; // 例如 "8 Apr, 7:35pm UTC"
+
+    function parseToAbsoluteTime(dateStr) {
         const months = { "Jan": 0, "Feb": 1, "Mar": 2, "Apr": 3, "May": 4, "Jun": 5, "Jul": 6, "Aug": 7, "Sep": 8, "Oct": 9, "Nov": 10, "Dec": 11 };
         const regex = /(\d+)\s([A-Za-z]{3}),\s(\d+):(\d+)(am|pm)/i;
         const match = dateStr.match(regex);
+        
         if (!match) return null;
 
-        let day = parseInt(match[1]);
-        let month = months[match[2]];
+        const day = parseInt(match[1]);
+        const month = months[match[2]];
         let hour = parseInt(match[3]);
-        let minute = parseInt(match[4]);
-        let ampm = match[5].toLowerCase();
+        const minute = parseInt(match[4]);
+        const ampm = match[5].toLowerCase();
 
         if (ampm === "pm" && hour < 12) hour += 12;
         if (ampm === "am" && hour === 12) hour = 0;
 
-        let targetUTC;
-        if (dateStr.toUpperCase().includes("UTC")) {
-            // 來源是 UTC：直接用 Date.UTC 建立標準時間
-            targetUTC = Date.UTC(2026, month, day, hour, minute);
-        } else {
-            // 來源已是 GMT+8：需扣除 8 小時轉回 UTC 基準
-            targetUTC = Date.UTC(2026, month, day, hour, minute) - (8 * 60 * 60 * 1000);
-        }
-        return new Date(targetUTC);
+        // --- 核心修正：統一處理為 UTC 絕對時間 ---
+        // 無論字串有沒有寫 UTC，根據你的觀察，來源就是 UTC
+        // Date.UTC 回傳的是該時間點的 Unix Timestamp (毫秒)
+        return Date.UTC(2026, month, day, hour, minute);
     }
 
-    const launchDate = parseToGMT8(mission['Time (時間)']);
+    const launchTimestamp = parseToAbsoluteTime(rawTimeStr);
     
-    if (!launchDate) {
-        document.getElementById('countdown-hero').querySelector('.bg-black\\/50').innerHTML = `<p class="text-white text-xl">${mission['Time (時間)']}</p>`;
+    if (!launchTimestamp) {
+        // 解析失敗（例如只有月份）的處理邏輯
         return;
     }
 
-    // --- 2. 顯示資訊 (統一顯示為 GMT+8 格式) ---
-    // 將發射日期轉為 GMT+8 顯示字串
-    const options = { timeZone: 'Asia/Taipei', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
-    const gmt8Display = launchDate.toLocaleString('en-US', options) + " (GMT+8)";
+    // --- 計算顯示用的 GMT+8 時間 ---
+    // 將絕對時間加上 8 小時的毫秒數，轉化為台北時間顯示
+    const taiwanTime = new Date(launchTimestamp); 
+    const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Taipei' };
+    const displayGMT8 = taiwanTime.toLocaleString('zh-TW', options);
 
+    // 填寫 UI 資訊
     document.getElementById('hero-payload').innerText = mission['Payload (載荷)'];
     document.getElementById('hero-rocket').innerText = mission['Rocket (型號)'];
     document.getElementById('hero-site').innerText = "📍 " + mission['Site (地點)'];
     document.getElementById('hero-orbit').innerText = "🎯 " + mission['Target (目標)'];
     
-    // 在 Hero 區塊顯示轉換後的 GMT+8 時間
-    const timeDisplay = document.createElement('p');
-    timeDisplay.className = "text-xs text-teal-300 mt-1 font-mono";
-    timeDisplay.innerText = "Launch: " + gmt8Display;
-    
-    // 避免重複添加
-    const oldDisplay = document.querySelector('.launch-gmt8-label');
-    if (oldDisplay) oldDisplay.remove();
-    timeDisplay.classList.add('launch-gmt8-label');
-    document.getElementById('hero-rocket').after(timeDisplay);
+    // 顯示轉換後的台北發射時間，讓使用者安心
+    let timeLabel = document.querySelector('.launch-time-label');
+    if (!timeLabel) {
+        timeLabel = document.createElement('p');
+        timeLabel.className = "launch-time-label text-xs text-teal-300 mt-1 font-mono";
+        document.getElementById('hero-rocket').after(timeLabel);
+    }
+    timeLabel.innerText = "預計發射 (GMT+8): " + displayGMT8;
 
     hero.classList.remove('hidden');
 
-    // --- 3. 啟動定時器 ---
+    // --- 啟動倒數定時器 ---
     if (countdownTimer) clearInterval(countdownTimer);
-    const launchTime = launchDate.getTime();
 
     countdownTimer = setInterval(() => {
-        const now = new Date().getTime();
-        const distance = launchTime - now;
+        const now = new Date().getTime(); // 瀏覽器當前的絕對時間 (也是以 UTC 基準)
+        const distance = launchTimestamp - now;
 
         if (distance < 0) {
             clearInterval(countdownTimer);
