@@ -206,10 +206,10 @@ function initImagingLogic() {
 
     function updateImages() {
         const now = new Date();
-        const timestamp = now.getTime(); // 產生一串唯一的數字，強迫瀏覽器抓新圖
+        const timestamp = now.getTime();
         const timeDisplay = getNowTime();
 
-        // --- A. 研究室 (Base64 格式，需透過 GAS 抓取) ---
+        // A. 研究室
         const liveImg = document.getElementById('live-image');
         const liveStatus = document.getElementById('status-live');
         if (liveImg) {
@@ -220,11 +220,10 @@ function initImagingLogic() {
                         liveImg.src = "data:image/jpeg;base64," + base64;
                         if (liveStatus) liveStatus.innerText = "最後同步: " + timeDisplay;
                     }
-                })
-                .catch(err => console.error("研究室影像抓取失敗", err));
+                });
         }
 
-        // --- B. 鹿林天文台 (直接 URL 格式) ---
+        // B. 鹿林
         const lulinImg = document.getElementById('lulin-allsky');
         const lulinStatus = document.getElementById('status-lulin');
         if (lulinImg) {
@@ -232,14 +231,13 @@ function initImagingLogic() {
             if (lulinStatus) lulinStatus.innerText = "最後同步: " + timeDisplay;
         }
 
-        // --- C. 阿拉斯加 Poker Flat (直接 URL 格式) ---
-        const pokerImg = document.getElementById('pokerflat-allsky');
-        if (pokerImg) {
-            pokerImg.src = alaskaUrl + "?t=" + timestamp;
-            // 如果你在 Alaska 區塊也有加 status 元素，可以在此更新
+        // C. 阿拉斯加 (新增：同步更新時間標籤)
+        const alaskaImg = document.getElementById('pokerflat-allsky');
+        const alaskaStatus = document.getElementById('status-alaska');
+        if (alaskaImg) {
+            alaskaImg.src = alaskaUrl + "?t=" + timestamp;
+            if (alaskaStatus) alaskaStatus.innerText = "最後同步: " + timeDisplay;
         }
-        
-        console.log(`✨ 全域影像同步完成 @ ${timeDisplay}`);
     }
 
     function getNowTime() {

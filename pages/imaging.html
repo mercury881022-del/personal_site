@@ -129,25 +129,25 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-10 items-center">
-                <div class="glass-card p-5 rounded-2xl border border-blue-900/30 monitor-glow shadow-[0_0_30px_rgba(59,130,246,0.05)]">
+                <div class="glass-card p-5 rounded-2xl border border-teal-900/40 monitor-glow">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-white font-bold text-sm flex items-center gap-2">
-                            <i class="ri-temp-cold-line text-blue-400"></i> Poker Flat 觀測站 (Alaska)
+                        <h3 class="text-white font-bold text-sm flex items-center gap-2 uppercase tracking-tight">
+                            <i class="ri-temp-cold-line text-teal-500"></i> Poker Flat 觀測站 (Alaska)
                         </h3>
-                        <span class="text-[10px] text-blue-400 font-mono px-2 py-0.5 bg-blue-500/10 rounded uppercase tracking-tighter">Live Feed</span>
+                        <span id="status-alaska" class="text-[10px] text-gray-500 font-mono italic">SYNCING...</span>
                     </div>
                     <div class="aspect-video bg-black rounded-xl overflow-hidden border border-white/5 relative">
-                        <img id="pokerflat-allsky" src="https://allsky.gi.alaska.edu/PKR/latest-cam.jpg" 
+                        <img id="pokerflat-allsky" src="https://allsky.gi.alaska.edu/PKR/latest-eye.jpg" 
                              class="w-full h-full object-contain" alt="Alaska Feed">
-                        <div class="absolute bottom-3 left-4 text-[10px] font-mono text-blue-500/50 uppercase">Site: PKR_Alaska</div>
+                        <div class="absolute bottom-3 left-4 text-[10px] font-mono text-teal-500/50 uppercase">Site: PKR_Alaska</div>
                     </div>
                 </div>
                 <div class="space-y-6 lg:pl-4">
                     <div>
-                        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">Station Info</h4>
+                        <h4 class="text-xs font-bold text-teal-400 uppercase tracking-widest mb-3">Operator Info</h4>
                         <div class="grid grid-cols-2 gap-3 text-[11px] font-mono">
                             <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                                <p class="text-gray-500 mb-1">OPERATOR</p>
+                                <p class="text-gray-500 mb-1">AFFILIATION</p>
                                 <p class="text-white font-bold text-[10px]">UAF researchers</p>
                             </div>
                             <div class="bg-white/5 p-3 rounded-lg border border-white/5">
@@ -157,12 +157,12 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">Site Description</h4>
-                        <p class="text-sm text-gray-400 leading-relaxed italic border-l-2 border-blue-500/30 pl-4 mb-6">
-                            位於阿拉斯加 Poker Flat 研究範圍。由 Don Hampton 與 Jason Ahrns 運行，提供極地極光活動的重要觀測資料。
+                        <h4 class="text-xs font-bold text-teal-400 uppercase tracking-widest mb-3">Site Description</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed italic border-l-2 border-teal-500/30 pl-4 mb-6">
+                            位於阿拉斯加 Poker Flat 研究範圍。由 Don Hampton 與 Jason Ahrns 運行，提供極地極光活動的重要觀測資料，是地磁擾動研究之關鍵站點。
                         </p>
                         <a href="https://allsky.gi.alaska.edu/" target="_blank" 
-                           class="btn-scan inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono rounded-lg hover:bg-blue-500/20 transition group">
+                           class="btn-scan inline-flex items-center gap-2 px-4 py-2 bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono rounded-lg hover:bg-teal-500/20 transition group">
                             <i class="ri-external-link-line"></i>
                             UAF ALL-SKY HUB
                             <i class="ri-arrow-right-up-line opacity-50 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
@@ -193,10 +193,10 @@
                     </div>
                 </div>
                 <div class="flex items-start gap-5">
-                    <div class="w-3 h-3 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)] mt-1"></div>
+                    <div class="w-3 h-3 rounded-full bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.5)] mt-1 animate-pulse"></div>
                     <div>
-                        <p class="text-[10px] text-gray-500 font-mono uppercase">Node_03: Svalbard</p>
-                        <p class="text-lg font-bold text-white tracking-tight">MAINTENANCE</p>
+                        <p class="text-[10px] text-gray-500 font-mono uppercase">Node_03: Alaska (PKR)</p>
+                        <p class="text-lg font-bold text-white tracking-tight">OPERATIONAL</p>
                     </div>
                 </div>
             </div>
