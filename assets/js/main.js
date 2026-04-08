@@ -101,30 +101,63 @@ async function renderCASCMissions() {
     }
 }
 
-// --- 4. 倒數計時核心功能 ---
 function setupCountdown(mission) {
     const hero = document.getElementById('countdown-hero');
     if (!hero) return;
     
+    // 1. 填寫 Hero 資訊
     document.getElementById('hero-payload').innerText = mission['Payload (載荷)'];
     document.getElementById('hero-rocket').innerText = mission['Rocket (型號)'];
     document.getElementById('hero-site').innerText = "📍 " + mission['Site (地點)'];
     document.getElementById('hero-orbit').innerText = "🎯 " + mission['Target (目標)'];
     hero.classList.remove('hidden');
 
-    // 🎯 說明 1：強化日期解析邏輯
-    // 原始格式 "8 Apr, 7:35pm" -> 轉換為 "Apr 8 2026 19:35:00"
-    let timeStr = mission['Time (時間)'].replace('GMT+8', '').replace('UTC', '').trim();
-    
-    // 補上年份並嘗試轉換
-    const launchTime = new Date(timeStr + " 2026").getTime();
+    // 2. [手動解析法]：強制拆解 "8 Apr, 7:35pm" 這種格式
+    function manualParse(dateStr) {
+        const months = { "Jan": 0, "Feb": 1, "Mar": 2, "Apr": 3, "May": 4, "Jun": 5, "Jul": 6, "Aug": 7, "Sep": 8, "Oct": 9, "Nov": 10, "Dec": 11 };
+        
+        // 正規表達式：抓取 [日] [月], [時]:[分][am/pm]
+        // 例如：9 Apr, 3:35am
+        const regex = /(\d+)\s([A-Za-z]{3}),\s(\d+):(\d+)(am|pm)/i;
+        const match = dateStr.match(regex);
 
-    if (isNaN(launchTime)) {
-        console.warn("⚠️ 日期解析依然失敗，嘗試手動解析法...");
-        // 如果瀏覽器還是不吃，回報錯誤 (通常這步在 Chrome/Edge 已經能動了)
+        if (!match) return null;
+
+        const day = parseInt(match[1]);
+        const month = months[match[2]];
+        let hour = parseInt(match[3]);
+        const minute = parseInt(match[4]);
+        const ampm = match[5].toLowerCase();
+
+        // 轉換 12 小時制為 24 小時制
+        if (ampm === "pm" && hour < 12) hour += 12;
+        if (ampm === "am" && hour === 12) hour = 0;
+
+        // 建立 2026 年的日期物件
+        // 這裡預設抓到的時間是 GMT+8 (台北時間)
+        const date = new Date(2026, month, day, hour, minute);
+
+        // 如果來源是 UTC (例如 8 Apr, 7:35pm UTC)，則需要特別處理時區偏移
+        if (dateStr.toUpperCase().includes("UTC")) {
+             // 將產生的時間當作 UTC，並自動轉換成瀏覽器當前時區
+             return new Date(Date.UTC(2026, month, day, hour, minute));
+        }
+
+        return date;
+    }
+
+    const launchDate = manualParse(mission['Time (時間)']);
+    
+    if (!launchDate) {
+        console.warn("⚠️ 無法進行倒數（可能日期不完整）:", mission['Time (時間)']);
+        // 如果是 "Jun 2026" 這種沒時間的，就不顯示倒數，只顯示日期
+        document.getElementById('countdown-hero').querySelector('.flex.gap-4').innerHTML = `<p class="text-white text-xl">${mission['Time (時間)']}</p>`;
         return;
     }
 
+    const launchTime = launchDate.getTime();
+
+    // 3. 啟動定時器
     if (countdownTimer) clearInterval(countdownTimer);
 
     countdownTimer = setInterval(() => {
@@ -142,10 +175,10 @@ function setupCountdown(mission) {
         const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((distance % (1000 * 60)) / 1000);
 
-        if (document.getElementById('days')) document.getElementById('days').innerText = d.toString().padStart(2, '0');
-        if (document.getElementById('hours')) document.getElementById('hours').innerText = h.toString().padStart(2, '0');
-        if (document.getElementById('minutes')) document.getElementById('minutes').innerText = m.toString().padStart(2, '0');
-        if (document.getElementById('seconds')) document.getElementById('seconds').innerText = s.toString().padStart(2, '0');
+        document.getElementById('days').innerText = d.toString().padStart(2, '0');
+        document.getElementById('hours').innerText = h.toString().padStart(2, '0');
+        document.getElementById('minutes').innerText = m.toString().padStart(2, '0');
+        document.getElementById('seconds').innerText = s.toString().padStart(2, '0');
     }, 1000);
 }
 
