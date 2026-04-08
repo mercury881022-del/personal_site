@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("📍 目前頁面路徑:", window.location.pathname);
     renderNavbar();
     
-    // 偵測是否為影像觀測頁面
     if (document.getElementById('live-image')) {
         initImagingLogic();
     }
@@ -12,22 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function renderNavbar() {
     const navPlaceholder = document.getElementById('navbar-placeholder');
-    if (!navPlaceholder) {
-        console.error("❌ 找不到 id='navbar-placeholder' 的標籤，請檢查 HTML！");
-        return;
-    }
+    if (!navPlaceholder) return;
 
-    // --- 自動判定路徑邏輯 ---
-    // 檢查網址裡是否包含 "/pages/"
+    // 判斷是否在 pages 資料夾內（不論是本地還是 Vercel）
     const isInsidePages = window.location.pathname.toLowerCase().includes('/pages/');
     
-    // 如果在 pages 內，回首頁要 ../ ； 去分頁不用 prefix
-    // 如果在根目錄，回首頁不用 prefix； 去分頁要 ./pages/
-    const rootPath = isInsidePages ? '../index.html' : './index.html';
-    const pagesPrefix = isInsidePages ? './' : './pages/';
+    // 使用「絕對路徑」(/ 開頭)，這樣不論你在哪一層，連結都不會連錯
+    const rootPath = "/index.html";
+    const imagingPath = "/pages/imaging.html";
+    const satellitePath = "/pages/satellite.html";
+    const gpsPath = "/pages/gps.html";
+    const rocketPath = "/pages/rocket.html";
     const logoImg = "https://public.readdy.ai/ai/img_res/f4897f5b-3554-4f1f-8862-12da2085430e.png";
-
-    console.log(isInsidePages ? "📂 偵測到在 pages 資料夾內" : "🏠 偵測到在根目錄");
 
     navPlaceholder.innerHTML = `
     <nav class="fixed top-0 left-0 w-full z-50 bg-[#060a0d]/90 backdrop-blur-md border-b border-teal-900/40 px-6 py-4">
@@ -38,10 +33,10 @@ function renderNavbar() {
             </a>
             <div class="flex gap-4 md:gap-6 text-xs md:text-sm text-gray-300">
                 <a href="${rootPath}" class="hover:text-teal-400 transition">首頁</a>
-                <a href="${pagesPrefix}imaging.html" class="hover:text-teal-400 transition">全天影像</a>
-                <a href="${pagesPrefix}satellite.html" class="hover:text-teal-400 transition">衛星掩星</a>
-                <a href="${pagesPrefix}gps.html" class="hover:text-teal-400 transition">GNSS</a>
-                <a href="${pagesPrefix}rocket.html" class="hover:text-teal-400 transition">火箭資訊</a>
+                <a href="${imagingPath}" class="hover:text-teal-400 transition">全天影像</a>
+                <a href="${satellitePath}" class="hover:text-teal-400 transition">衛星掩星</a>
+                <a href="${gpsPath}" class="hover:text-teal-400 transition">GNSS</a>
+                <a href="${rocketPath}" class="hover:text-teal-400 transition">火箭資訊</a>
             </div>
         </div>
     </nav>`;
