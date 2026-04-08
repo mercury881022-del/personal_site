@@ -25,7 +25,45 @@
                 <span class="w-2 h-6 bg-teal-500"></span>
                 <h2 class="text-xl font-bold">CASC 中國航天科技集團 - 發射時程</h2>
             </div>
-            
+            <div id="countdown-hero" class="mb-10 hidden">
+                <div class="relative overflow-hidden bg-gradient-to-br from-teal-900/40 to-black p-8 rounded-2xl border border-teal-500/50 shadow-[0_0_30px_rgba(20,184,166,0.15)]">
+                    <div class="absolute top-0 right-0 p-4 opacity-20 text-teal-500 text-6xl">🚀</div>
+                    
+                    <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="text-center md:text-left">
+                            <span class="text-xs font-mono text-teal-400 tracking-widest uppercase">Latest Mission Tracking</span>
+                            <h2 id="hero-payload" class="text-3xl font-bold text-white mt-1">---</h2>
+                            <p id="hero-rocket" class="text-teal-500 font-mono">---</p>
+                            <div class="flex gap-4 mt-4 text-xs text-gray-400">
+                                <span id="hero-site">📍 ---</span>
+                                <span id="hero-orbit">🎯 ---</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-black/50 backdrop-blur-sm p-6 rounded-xl border border-teal-500/30 flex gap-4">
+                            <div class="text-center">
+                                <div id="days" class="text-3xl font-bold text-white">00</div>
+                                <div class="text-[10px] text-teal-500 uppercase">Days</div>
+                            </div>
+                            <div class="text-teal-500 text-3xl font-bold">:</div>
+                            <div class="text-center">
+                                <div id="hours" class="text-3xl font-bold text-white">00</div>
+                                <div class="text-[10px] text-teal-500 uppercase">Hrs</div>
+                            </div>
+                            <div class="text-teal-500 text-3xl font-bold">:</div>
+                            <div class="text-center">
+                                <div id="minutes" class="text-3xl font-bold text-white">00</div>
+                                <div class="text-[10px] text-teal-500 uppercase">Min</div>
+                            </div>
+                            <div class="text-teal-500 text-3xl font-bold">:</div>
+                            <div class="text-center">
+                                <div id="seconds" class="text-3xl font-bold text-white">00</div>
+                                <div class="text-[10px] text-teal-500 uppercase">Sec</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="casc-mission-list" class="grid gap-4">
                 <p class="text-gray-500 animate-pulse text-sm">正在獲取最新發射窗口數據...</p>
             </div>
