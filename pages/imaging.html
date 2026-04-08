@@ -8,48 +8,109 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css">
     <style>body { background-color: #060a0d; color: white; }</style>
 </head>
-<body class="pt-24 px-6 pb-12">
+<body class="pt-24 px-6 pb-12 text-gray-200">
     <div id="navbar-placeholder"></div>
+
     <div class="max-w-6xl mx-auto">
-        <div class="bg-teal-900/20 border border-teal-800 rounded-2xl p-8 mb-8">
-            <h1 class="text-4xl font-black mb-4 text-white">全天影像觀測</h1>
-            <p class="text-gray-400">利用魚眼鏡頭記錄氣輝、極光及電離層發光現象。下方為即時觀測影像監測。</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            <div class="bg-[#0a1212] p-4 rounded-xl border border-teal-900/40 flex flex-col items-center">
-                <h3 class="text-teal-400 font-bold mb-3 self-start"><i class="ri-broadcast-line mr-2"></i>研究室即時觀測 (全天)</h3>
-                <div class="relative w-full aspect-video bg-black/50 rounded-lg overflow-hidden flex items-center justify-center border border-white/5">
-                    <img id="live-image" src="" class="max-w-full max-height-full object-contain">
-                </div>
-                <p id="status-live" class="text-[10px] mt-3 font-mono text-gray-500 uppercase tracking-widest">
-                    最後同步時間: 載入中...
-                </p>
+        <div class="mb-10 flex items-end justify-between border-b border-teal-900/30 pb-6">
+            <div>
+                <h1 class="text-4xl font-black text-white tracking-tighter">ALL-SKY <span class="text-teal-400">IMAGING</span></h1>
+                <p class="text-gray-500 mt-2 font-mono text-sm uppercase tracking-widest">Global Ionospheric Observation Network</p>
             </div>
-
-            <div class="bg-[#0a1212] p-4 rounded-xl border border-teal-900/40 flex flex-col items-center">
-                <h3 class="text-teal-400 font-bold mb-3 self-start"><i class="ri-temp-hot-line mr-2"></i>鹿林天文台觀測</h3>
-                <div class="relative w-full aspect-video bg-black/50 rounded-lg overflow-hidden flex items-center justify-center border border-white/5">
-                    <img id="lulin-allsky" src="https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg" class="max-w-full max-height-full object-contain">
-                </div>
-                <p id="status-lulin" class="text-[10px] mt-3 font-mono text-gray-500 uppercase tracking-widest">
-                    最後同步時間: 載入中...
-                </p>
+            <div class="text-right hidden md:block">
+                <p class="text-[10px] text-teal-500 font-mono">STATION: NCU_LAB_TAIWAN</p>
+                <p class="text-[10px] text-gray-600 font-mono">COORD: 24.96°N, 121.19°E</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-[#0a1212] p-6 rounded-xl border border-teal-900/40">
-                <h3 class="text-xl font-bold mb-4 text-teal-400">觀測站點</h3>
-                <ul class="space-y-3 text-sm text-gray-300">
-                    <li class="flex justify-between border-b border-teal-900/20 pb-2"><span>中壢觀測站</span><span class="text-teal-500">運作中</span></li>
-                    <li class="flex justify-between border-b border-teal-900/20 pb-2"><span>屏東觀測站</span><span class="text-teal-500">運作中</span></li>
-                    <li class="flex justify-between pb-2"><span>花蓮觀測站</span><span class="text-amber-500">維護中</span></li>
-                </ul>
+        <div class="grid grid-cols-1 gap-12 mb-16">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 items-start">
+                <div class="bg-[#0a1212] p-4 rounded-xl border border-teal-900/40">
+                    <h3 class="text-teal-400 font-bold mb-3 flex justify-between">
+                        <span><i class="ri-broadcast-line mr-2"></i>研究室即時觀測 (台北)</span>
+                        <span id="status-live" class="text-[10px] text-gray-500 font-mono self-center">SYNCING...</span>
+                    </h3>
+                    <div class="aspect-video bg-black rounded-lg overflow-hidden border border-white/5 flex items-center justify-center">
+                        <img id="live-image" src="" class="max-w-full h-full object-contain">
+                    </div>
+                </div>
+                <div class="h-full border-l border-teal-900/20 pl-6 flex flex-col justify-center">
+                    <h4 class="text-sm font-bold text-teal-500/80 mb-2 uppercase">Observation Notes</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed italic">
+                        在此處輸入關於研究室觀測設備、建物高度限制對視場影響的分析，或是針對特定氣輝現象的觀測紀錄。
+                    </p>
+                </div>
             </div>
-            <div class="bg-[#0a1212] p-6 rounded-xl border border-teal-900/40">
-                <h3 class="text-xl font-bold mb-4 text-teal-400">設備規格</h3>
-                <p class="text-sm text-gray-400 leading-relaxed">採用科學級冷卻 CCD，視角 180°，支援 557.7/630.0 nm 波長濾鏡，捕捉微弱大氣輻射，為電離層擾動研究提供關鍵數據。</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 items-start">
+                <div class="bg-[#0a1212] p-4 rounded-xl border border-teal-900/40">
+                    <h3 class="text-teal-400 font-bold mb-3 flex justify-between">
+                        <span><i class="ri-radar-line mr-2"></i>鹿林天文台觀測 (NCU)</span>
+                        <span id="status-lulin" class="text-[10px] text-gray-500 font-mono self-center">SYNCING...</span>
+                    </h3>
+                    <div class="aspect-video bg-black rounded-lg overflow-hidden border border-white/5 flex items-center justify-center">
+                        <img id="lulin-allsky" src="https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg" class="max-w-full h-full object-contain">
+                    </div>
+                </div>
+                <div class="h-full border-l border-teal-900/20 pl-6 flex flex-col justify-center">
+                    <h4 class="text-sm font-bold text-teal-500/80 mb-2 uppercase">Site Description</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed italic">
+                        海拔 2,862 公尺。適合進行高大氣層 630nm/557.7nm 觀測。此處可紀錄當前高山天氣條件與光害干擾評估。
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 items-start">
+                <div class="bg-[#0a1212] p-4 rounded-xl border border-teal-900/40">
+                    <h3 class="text-teal-400 font-bold mb-3 flex justify-between">
+                        <span><i class="ri-snowy-line mr-2"></i>斯瓦爾巴測站 (Svalbard)</span>
+                        <span class="text-[10px] text-amber-500 font-mono self-center">POLAR NIGHT ACTIVE</span>
+                    </h3>
+                    <div class="aspect-video bg-black/80 rounded-lg overflow-hidden border border-white/5 flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="ri-camera-off-line text-3xl text-gray-700 mb-2"></i>
+                            <p class="text-[10px] text-gray-600 uppercase">極地冬季維護中</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-full border-l border-teal-900/20 pl-6 flex flex-col justify-center">
+                    <h4 class="text-sm font-bold text-teal-500/80 mb-2 uppercase">Thesis Context</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed italic">
+                        針對 Svalbard 研究設施之建物高度爭議與土地利用法規分析。此測站數據為電離層對稱性研究之關鍵對比數據。
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bg-gradient-to-r from-[#0a1212] to-transparent p-8 rounded-2xl border border-teal-900/40">
+            <h3 class="text-xl font-bold mb-6 text-white flex items-center gap-3">
+                <span class="w-1 h-5 bg-teal-500"></span>
+                觀測站運行狀態 (Network Status)
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                <div class="flex items-center gap-4">
+                    <div class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></div>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase">Taipei Lab</p>
+                        <p class="text-sm font-bold">線上觀測中</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></div>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase">NCU Lulin</p>
+                        <p class="text-sm font-bold">數據同步中</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 border-l border-white/5 pl-8">
+                    <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase">Svalbard</p>
+                        <p class="text-sm font-bold">極地維護中 (2026 Winter)</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
