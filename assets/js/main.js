@@ -105,60 +105,66 @@ function setupCountdown(mission) {
     const hero = document.getElementById('countdown-hero');
     if (!hero) return;
     
-    // 1. 填寫 Hero 資訊
+    // --- 1. 定義手動解析與時區轉換函式 ---
+    function parseToGMT8(dateStr) {
+        const months = { "Jan": 0, "Feb": 1, "Mar": 2, "Apr": 3, "May": 4, "Jun": 5, "Jul": 6, "Aug": 7, "Sep": 8, "Oct": 9, "Nov": 10, "Dec": 11 };
+        const regex = /(\d+)\s([A-Za-z]{3}),\s(\d+):(\d+)(am|pm)/i;
+        const match = dateStr.match(regex);
+        if (!match) return null;
+
+        let day = parseInt(match[1]);
+        let month = months[match[2]];
+        let hour = parseInt(match[3]);
+        let minute = parseInt(match[4]);
+        let ampm = match[5].toLowerCase();
+
+        if (ampm === "pm" && hour < 12) hour += 12;
+        if (ampm === "am" && hour === 12) hour = 0;
+
+        let targetUTC;
+        if (dateStr.toUpperCase().includes("UTC")) {
+            // 來源是 UTC：直接用 Date.UTC 建立標準時間
+            targetUTC = Date.UTC(2026, month, day, hour, minute);
+        } else {
+            // 來源已是 GMT+8：需扣除 8 小時轉回 UTC 基準
+            targetUTC = Date.UTC(2026, month, day, hour, minute) - (8 * 60 * 60 * 1000);
+        }
+        return new Date(targetUTC);
+    }
+
+    const launchDate = parseToGMT8(mission['Time (時間)']);
+    
+    if (!launchDate) {
+        document.getElementById('countdown-hero').querySelector('.bg-black\\/50').innerHTML = `<p class="text-white text-xl">${mission['Time (時間)']}</p>`;
+        return;
+    }
+
+    // --- 2. 顯示資訊 (統一顯示為 GMT+8 格式) ---
+    // 將發射日期轉為 GMT+8 顯示字串
+    const options = { timeZone: 'Asia/Taipei', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
+    const gmt8Display = launchDate.toLocaleString('en-US', options) + " (GMT+8)";
+
     document.getElementById('hero-payload').innerText = mission['Payload (載荷)'];
     document.getElementById('hero-rocket').innerText = mission['Rocket (型號)'];
     document.getElementById('hero-site').innerText = "📍 " + mission['Site (地點)'];
     document.getElementById('hero-orbit').innerText = "🎯 " + mission['Target (目標)'];
+    
+    // 在 Hero 區塊顯示轉換後的 GMT+8 時間
+    const timeDisplay = document.createElement('p');
+    timeDisplay.className = "text-xs text-teal-300 mt-1 font-mono";
+    timeDisplay.innerText = "Launch: " + gmt8Display;
+    
+    // 避免重複添加
+    const oldDisplay = document.querySelector('.launch-gmt8-label');
+    if (oldDisplay) oldDisplay.remove();
+    timeDisplay.classList.add('launch-gmt8-label');
+    document.getElementById('hero-rocket').after(timeDisplay);
+
     hero.classList.remove('hidden');
 
-    // 2. [手動解析法]：強制拆解 "8 Apr, 7:35pm" 這種格式
-    function manualParse(dateStr) {
-        const months = { "Jan": 0, "Feb": 1, "Mar": 2, "Apr": 3, "May": 4, "Jun": 5, "Jul": 6, "Aug": 7, "Sep": 8, "Oct": 9, "Nov": 10, "Dec": 11 };
-        
-        // 正規表達式：抓取 [日] [月], [時]:[分][am/pm]
-        // 例如：9 Apr, 3:35am
-        const regex = /(\d+)\s([A-Za-z]{3}),\s(\d+):(\d+)(am|pm)/i;
-        const match = dateStr.match(regex);
-
-        if (!match) return null;
-
-        const day = parseInt(match[1]);
-        const month = months[match[2]];
-        let hour = parseInt(match[3]);
-        const minute = parseInt(match[4]);
-        const ampm = match[5].toLowerCase();
-
-        // 轉換 12 小時制為 24 小時制
-        if (ampm === "pm" && hour < 12) hour += 12;
-        if (ampm === "am" && hour === 12) hour = 0;
-
-        // 建立 2026 年的日期物件
-        // 這裡預設抓到的時間是 GMT+8 (台北時間)
-        const date = new Date(2026, month, day, hour, minute);
-
-        // 如果來源是 UTC (例如 8 Apr, 7:35pm UTC)，則需要特別處理時區偏移
-        if (dateStr.toUpperCase().includes("UTC")) {
-             // 將產生的時間當作 UTC，並自動轉換成瀏覽器當前時區
-             return new Date(Date.UTC(2026, month, day, hour, minute));
-        }
-
-        return date;
-    }
-
-    const launchDate = manualParse(mission['Time (時間)']);
-    
-    if (!launchDate) {
-        console.warn("⚠️ 無法進行倒數（可能日期不完整）:", mission['Time (時間)']);
-        // 如果是 "Jun 2026" 這種沒時間的，就不顯示倒數，只顯示日期
-        document.getElementById('countdown-hero').querySelector('.flex.gap-4').innerHTML = `<p class="text-white text-xl">${mission['Time (時間)']}</p>`;
-        return;
-    }
-
-    const launchTime = launchDate.getTime();
-
-    // 3. 啟動定時器
+    // --- 3. 啟動定時器 ---
     if (countdownTimer) clearInterval(countdownTimer);
+    const launchTime = launchDate.getTime();
 
     countdownTimer = setInterval(() => {
         const now = new Date().getTime();
@@ -166,7 +172,7 @@ function setupCountdown(mission) {
 
         if (distance < 0) {
             clearInterval(countdownTimer);
-            document.getElementById('countdown-hero').innerHTML = `<p class="text-teal-400 text-center py-6 font-bold animate-pulse">🚀 MISSION IN PROGRESS / LIFT OFF SUCCESSFUL</p>`;
+            document.getElementById('countdown-hero').innerHTML = `<p class="text-teal-400 text-center py-10 font-bold animate-pulse">🚀 MISSION IN PROGRESS / LIFT OFF SUCCESSFUL</p>`;
             return;
         }
 
