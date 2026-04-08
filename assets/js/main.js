@@ -1,21 +1,17 @@
 // assets/js/main.js
 
-// --- 1. 統一入口：當頁面載入完成後執行 ---
+// --- 1. 統一入口 ---
 document.addEventListener('DOMContentLoaded', () => {
     console.log("🚀 太空天氣系統啟動... 頁面路徑:", window.location.pathname);
     
-    // 渲染導覽列
     renderNavbar();
     
-    // 偵測：如果有影像監測容器，啟動影像邏輯
     if (document.getElementById('live-image')) {
         initImagingLogic();
     }
     
-    // 偵測：如果有火箭清單容器，啟動火箭渲染
+    // 如果有火箭清單容器，啟動即時資料抓取
     if (document.getElementById('casc-mission-list')) {
-        // 你可以選擇執行 renderCASCMissions() [用寫死的資料] 
-        // 或是執行 fetchRocketData() [用 API 自動抓取]
         renderCASCMissions(); 
     }
 });
@@ -25,7 +21,6 @@ function renderNavbar() {
     const navPlaceholder = document.getElementById('navbar-placeholder');
     if (!navPlaceholder) return;
 
-    // 使用絕對路徑，確保 Vercel 上路徑不會出錯
     const rootPath = "/index.html";
     const imagingPath = "/pages/imaging.html";
     const satellitePath = "/pages/satellite.html";
@@ -51,57 +46,65 @@ function renderNavbar() {
     </nav>`;
 }
 
-// --- 3. 火箭資料渲染功能 (使用寫死資料) ---
-const cascMissions = [
-    { name: "長征八號 (Long March 8)", payload: "未知載荷", date: "2026-04-07", site: "文昌", status: "success" },
-    { name: "長征六號改 (Long March 6A)", payload: "未知載荷", date: "2026-04-08", site: "太原", status: "upcoming" },
-    { name: "神舟二十三號", payload: "載人飛船", date: "2026-06", site: "酒泉", status: "pending" },
-    { name: "嫦娥七號", payload: "探測器", date: "2026", site: "文昌", status: "pending" }
-];
-
-function renderCASCMissions() {
+// --- 3. 火緊即時資料渲染功能 (對接 Google Sheet) ---
+async function renderCASCMissions() {
     const list = document.getElementById('casc-mission-list');
     if (!list) return;
 
-    list.innerHTML = cascMissions.map(m => `
-        <div class="bg-[#0a1212] p-5 rounded-xl border ${m.status === 'upcoming' ? 'border-orange-500/50' : 'border-teal-900/40'} flex justify-between items-center mb-4">
-            <div>
-                <h3 class="font-bold text-white text-lg">${m.name}</h3>
-                <p class="text-xs text-gray-400">載荷：${m.payload} | 地點：${m.site}</p>
-            </div>
-            <div class="text-right">
-                <div class="text-sm font-mono text-gray-300 mb-2">${m.date}</div>
-                ${getStatusBadge(m.status)}
-            </div>
-        </div>
-    `).join('');
-}
+    // ⚠️ 請在這裡填入你剛剛部署好的 GAS 網頁應用程式網址
+    const gasUrl = "https://script.google.com/macros/s/AKfycbyq7_x0XElHAgQxGQP7LEkVXtynkUbZYYsYiwSz8_z5MiLFEt_dCcwVst9OfKtEqcNi/exec";
 
-// --- 4. 自動抓取 API (進階預留) ---
-async function fetchRocketData() {
-    const list = document.getElementById('casc-mission-list');
+    list.innerHTML = `<p class="text-teal-400 animate-pulse text-center py-10 font-mono">📡 正在同步 CASC 最新發射時程...</p>`;
+
     try {
-        const response = await fetch('https://lldev.thespacedevs.com/2.2.0/launch/upcoming/?search=CASC');
+        const response = await fetch(gasUrl);
         const data = await response.json();
-        // 如果想切換成 API，這裡需要另外寫渲染 logic (renderUI)
-        console.log("API 資料抓取成功", data);
+
+        if (!data || data.length === 0) {
+            list.innerHTML = "<p class='text-gray-500 text-center py-10'>目前暫無即將進行的任務。</p>";
+            return;
+        }
+
+        list.innerHTML = data.map(m => {
+            // 判斷是否為今天或即將到來的任務 (簡單邏輯：包含日期數字就給亮色)
+            const isUpcoming = m['Time (時間)'].includes('Apr') || m['Time (時間)'].includes('May');
+            
+            return `
+            <div class="bg-[#0a1212] p-5 rounded-xl border ${isUpcoming ? 'border-teal-500/40 shadow-[0_0_15px_rgba(20,184,166,0.1)]' : 'border-teal-900/20'} flex justify-between items-center mb-4 hover:border-teal-400/50 transition-all group">
+                <div>
+                    <h3 class="font-bold text-white text-lg group-hover:text-teal-300 transition-colors">${m['Payload (載荷)']}</h3>
+                    <p class="text-sm text-teal-500 font-mono mb-1">${m['Rocket (型號)']}</p>
+                    <p class="text-xs text-gray-400">📍 ${m['Site (地點)']} | 🎯 ${m['Target (目標)']}</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm font-bold text-white mb-2">${m['Time (時間)']}</div>
+                    ${getStatusBadge(m['Time (時間)'])}
+                </div>
+            </div>
+            `;
+        }).join('');
+
     } catch (error) {
-        console.error("抓取失敗:", error);
+        console.error("火箭資料抓取失敗:", error);
+        list.innerHTML = "<p class='text-red-400 text-center py-10'>❌ 資料連線失敗，請檢查 API 部署狀態。</p>";
     }
 }
 
-// --- 5. 輔助功能：狀態標籤 ---
-function getStatusBadge(status) {
-    if (status === 'success') return '<span class="text-[10px] bg-teal-900/40 text-teal-300 border border-teal-500/30 px-2 py-1 rounded-full">發射成功</span>';
-    if (status === 'upcoming') return '<span class="text-[10px] bg-orange-900/40 text-orange-300 border border-orange-500/30 px-2 py-1 rounded-full animate-pulse">即將發射</span>';
-    return '<span class="text-[10px] bg-gray-800 text-gray-400 px-2 py-1 rounded-full">準備中</span>';
+// --- 4. 輔助功能：狀態標籤 (根據日期內容自動判斷) ---
+function getStatusBadge(time) {
+    if (time.includes('Success') || time.includes('Success')) {
+        return '<span class="text-[10px] bg-teal-900/40 text-teal-300 border border-teal-500/30 px-2 py-1 rounded-full">任務成功</span>';
+    }
+    if (time.includes('Apr') || time.includes('GMT+8') || time.includes('UTC')) {
+        return '<span class="text-[10px] bg-orange-900/40 text-orange-300 border border-orange-500/30 px-2 py-1 rounded-full animate-pulse">倒數中</span>';
+    }
+    return '<span class="text-[10px] bg-gray-800 text-gray-400 px-2 py-1 rounded-full">排程中</span>';
 }
 
-// --- 6. 影像更新邏輯 ---
+// --- 5. 影像更新邏輯 (維持不變) ---
 function initImagingLogic() {
     const webAppUrl = "https://script.google.com/macros/s/AKfycbxHVefdwt1XABlPMrLags4BOAJop1UNZaVARvR5DnsSzbN9NiYmsusAufet3jEbwpPs/exec";
-    const lulinBaseUrl = "https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg";
-
+    
     function updateLiveImage() {
         const img = document.getElementById('live-image');
         const status = document.getElementById('status-live');
