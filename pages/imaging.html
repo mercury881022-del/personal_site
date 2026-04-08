@@ -10,6 +10,14 @@
         body { background-color: #05080a; color: #e2e8f0; font-family: 'Inter', system-ui, sans-serif; }
         .monitor-glow { box-shadow: 0 0 20px rgba(20, 184, 166, 0.05); }
         .glass-card { background: linear-gradient(135deg, rgba(10, 18, 18, 0.8), rgba(0, 0, 0, 0.9)); }
+        /* 按鈕掃描光效 */
+        .btn-scan { position: relative; overflow: hidden; }
+        .btn-scan::after {
+            content: ""; position: absolute; top: -100%; left: -100%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(20, 184, 166, 0.1), transparent);
+            transition: 0.5s;
+        }
+        .btn-scan:hover::after { top: 0; left: 0; }
     </style>
 </head>
 <body class="pt-24 px-6 pb-12">
@@ -22,12 +30,12 @@
                     <span class="px-2 py-0.5 bg-teal-500/10 text-teal-500 text-[10px] font-bold tracking-widest uppercase border border-teal-500/20 rounded">Live System</span>
                     <span class="text-gray-600 text-[10px] font-mono">ID: NCU-AS-NET-01</span>
                 </div>
-                <h1 class="text-5xl font-black text-white tracking-tighter italic">ALL-SKY <span class="text-teal-400">IMAGING</span></h1>
-                <p class="text-gray-500 mt-2 font-mono text-xs uppercase tracking-[0.2em]">Atmospheric Airglow & Aurora Observation</p>
+                <h1 class="text-5xl font-black text-white tracking-tighter italic uppercase">All-Sky <span class="text-teal-400">Imaging</span></h1>
+                <p class="text-gray-500 mt-2 font-mono text-xs uppercase tracking-[0.2em]">Atmospheric Airglow & Aurora Observation Network</p>
             </div>
             <div class="text-right mt-6 md:mt-0 font-mono">
-                <p class="text-xs text-teal-500/70">REGION: ASIA-PACIFIC / POLAR</p>
-                <p class="text-xs text-gray-600">REF_TIME: 2026-04-08 UTC+8</p>
+                <p class="text-xs text-teal-500/70 uppercase">Region: Global Monitoring</p>
+                <p class="text-xs text-gray-600">Ref_Time: 2026-04-08 UTC+8</p>
             </div>
         </div>
 
@@ -41,13 +49,13 @@
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
                             </span>
-                            研究室即時監測 (Station A)
+                            IRSL 研究室即時監測 (Lulin)
                         </h3>
-                        <span id="status-live" class="text-[10px] text-gray-500 font-mono">LAST_SYNC: 0.5s ago</span>
+                        <span id="status-live" class="text-[10px] text-gray-500 font-mono italic">SYNCING...</span>
                     </div>
-                    <div class="aspect-video bg-black rounded-xl overflow-hidden border border-white/5 relative group">
-                        <img id="live-image" src="" class="w-full h-full object-contain transition group-hover:scale-[1.02]">
-                        <div class="absolute bottom-3 left-4 text-[10px] font-mono text-teal-500/50">CAM_01_RAW_FEED</div>
+                    <div class="aspect-video bg-black rounded-xl overflow-hidden border border-white/5 relative">
+                        <img id="live-image" src="" class="w-full h-full object-contain" alt="IRSL Live Feed">
+                        <div class="absolute bottom-3 left-4 text-[10px] font-mono text-teal-500/50 uppercase">Cam_A: Raw_Feed</div>
                     </div>
                 </div>
                 <div class="space-y-6 lg:pl-4">
@@ -56,19 +64,25 @@
                         <div class="grid grid-cols-2 gap-3 text-[11px] font-mono">
                             <div class="bg-white/5 p-3 rounded-lg border border-white/5">
                                 <p class="text-gray-500 mb-1">INSTRUMENT</p>
-                                <p class="text-white">EUDA 2M</p>
+                                <p class="text-white font-bold">EUDA 2M</p>
                             </div>
                             <div class="bg-white/5 p-3 rounded-lg border border-white/5">
                                 <p class="text-gray-500 mb-1">ALTITUDE</p>
-                                <p class="text-white">2,862m (Lulin)</p>
+                                <p class="text-white font-bold">2,862m</p>
                             </div>
                         </div>
                     </div>
                     <div>
                         <h4 class="text-xs font-bold text-teal-400 uppercase tracking-widest mb-3">Observation Logic</h4>
-                        <p class="text-sm text-gray-400 leading-relaxed">
-                            夜間配置 <span class="text-teal-200">630.0 nm</span> 窄頻濾光片，以每2分鐘曝光拍攝一次，觀測電離層 F 層大氣輝光探測。日間切換每 30 分鐘執行 Pattern Drill 序列拍攝（10-frame burst），用於監控對流層雲量對科學觀測之遮蔽影響。
+                        <p class="text-sm text-gray-400 leading-relaxed mb-6 italic">
+                            夜間配置 630.0 nm 濾光片觀測電離層 F 層。日間執行 Pattern Drill 序列拍攝（10-frame burst）監控對流層雲量。
                         </p>
+                        <a href="https://irsl.ss.ncu.edu.tw/media/product/Allsky/index2.html" target="_blank" 
+                           class="btn-scan inline-flex items-center gap-2 px-4 py-2 bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono rounded-lg hover:bg-teal-500/20 transition group">
+                            <i class="ri-history-line"></i>
+                            ACCESS HISTORY DATA
+                            <i class="ri-arrow-right-up-line opacity-50 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -76,13 +90,13 @@
             <div class="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-10 items-center">
                 <div class="glass-card p-5 rounded-2xl border border-teal-900/40 monitor-glow">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-white font-bold text-sm flex items-center gap-2">
-                            <i class="ri-radar-line text-teal-500"></i> 鹿林天文台觀測 (Station B)
+                        <h3 class="text-white font-bold text-sm flex items-center gap-2 uppercase tracking-tight">
+                            <i class="ri-radar-line text-teal-500"></i> NCU 鹿林天文台 (B-Site)
                         </h3>
-                        <span id="status-lulin" class="text-[10px] text-gray-500 font-mono">SOURCE: NCU_LULIN</span>
+                        <span id="status-lulin" class="text-[10px] text-gray-500 font-mono italic">SYNCING...</span>
                     </div>
                     <div class="aspect-video bg-black rounded-xl overflow-hidden border border-white/5">
-                        <img id="lulin-allsky" src="https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg" class="w-full h-full object-contain">
+                        <img id="lulin-allsky" src="https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg" class="w-full h-full object-contain" alt="Lulin Feed">
                     </div>
                 </div>
                 <div class="space-y-6 lg:pl-4">
@@ -91,62 +105,71 @@
                         <div class="grid grid-cols-2 gap-3 text-[11px] font-mono">
                             <div class="bg-white/5 p-3 rounded-lg border border-white/5">
                                 <p class="text-gray-500 mb-1">INSTRUMENT</p>
-                                <p class="text-white">ALPHEA 6CW</p>
+                                <p class="text-white font-bold">ALPHEA 6CW</p>
                             </div>
                             <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                                <p class="text-gray-500 mb-1">ALTITUDE</p>
-                                <p class="text-white">2,862m (Lulin)</p>
+                                <p class="text-gray-500 mb-1">LOCATION</p>
+                                <p class="text-white font-bold">Lulin Mt.</p>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <h4 class="text-xs font-bold text-teal-400 uppercase tracking-widest mb-3">NCU Shared Data</h4>
-                        <p class="text-sm text-gray-400 leading-relaxed">
-                            本數據由中央大學鹿林天文台共享提供。作為研究室即時影像之交叉比對基準，用於排除局部大氣閃爍（Scintillation）干擾，確保電離層擾動訊號之真實性。
+                        <h4 class="text-xs font-bold text-teal-400 uppercase tracking-widest mb-3">Shared Data Context</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed mb-6 italic">
+                            由中央大學鹿林天文台提供數據。用於排除局部大氣閃爍干擾，作為研究室即時影像之交叉比對基準。
                         </p>
+                        <a href="https://www.lulin.ncu.edu.tw/weather/allSkyHistory/" target="_blank" 
+                           class="btn-scan inline-flex items-center gap-2 px-4 py-2 bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono rounded-lg hover:bg-teal-500/20 transition group">
+                            <i class="ri-database-2-line"></i>
+                            LULIN ARCHIVE DB
+                            <i class="ri-arrow-right-up-line opacity-50 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+                        </a>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-10 items-center">
-                <div class="glass-card p-5 rounded-2xl border border-amber-900/30 monitor-glow shadow-[0_0_30px_rgba(245,158,11,0.03)]">
+                <div class="glass-card p-5 rounded-2xl border border-blue-900/30 monitor-glow shadow-[0_0_30px_rgba(59,130,246,0.05)]">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-white font-bold text-sm flex items-center gap-2">
-                            <i class="ri-snowy-line text-amber-500"></i> 斯瓦爾巴測站 (Arctic KHO)
+                            <i class="ri-temp-cold-line text-blue-400"></i> Poker Flat 觀測站 (Alaska)
                         </h3>
-                        <span class="text-[10px] text-amber-500 font-mono px-2 py-0.5 bg-amber-500/10 rounded">POLAR NIGHT ACTIVE</span>
+                        <span class="text-[10px] text-blue-400 font-mono px-2 py-0.5 bg-blue-500/10 rounded uppercase tracking-tighter">Live Feed</span>
                     </div>
-                    <div class="aspect-video bg-[#050505] rounded-xl overflow-hidden border border-white/5 flex items-center justify-center relative">
-                        <div class="text-center">
-                            <i class="ri-camera-off-line text-4xl text-gray-800 mb-3"></i>
-                            <p class="text-[10px] text-gray-600 font-mono tracking-widest">SYSTEM_STATUS: STANDBY</p>
-                        </div>
-                        <div class="absolute top-4 left-4 text-[10px] font-mono text-gray-700">COORD: 78.2°N, 15.6°E</div>
+                    <div class="aspect-video bg-black rounded-xl overflow-hidden border border-white/5 relative">
+                        <img id="pokerflat-allsky" src="https://allsky.gi.alaska.edu/PKR/latest-eye.jpg" 
+                             class="w-full h-full object-contain" alt="Alaska Feed">
+                        <div class="absolute bottom-3 left-4 text-[10px] font-mono text-blue-500/50 uppercase">Site: PKR_Alaska</div>
                     </div>
                 </div>
                 <div class="space-y-6 lg:pl-4">
                     <div>
-                        <h4 class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">Thesis Context</h4>
+                        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">Station Info</h4>
                         <div class="grid grid-cols-2 gap-3 text-[11px] font-mono">
                             <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                                <p class="text-gray-500 mb-1">INSTRUMENT</p>
-                                <p class="text-white font-bold">OMEA 5C</p>
+                                <p class="text-gray-500 mb-1">OPERATOR</p>
+                                <p class="text-white font-bold text-[10px]">UAF researchers</p>
                             </div>
                             <div class="bg-white/5 p-3 rounded-lg border border-white/5">
-                                <p class="text-gray-500 mb-1">FACILITY</p>
-                                <p class="text-white font-bold">KHO Observatory</p>
+                                <p class="text-gray-500 mb-1">COORD</p>
+                                <p class="text-white font-bold tracking-tighter">65.1N, 147.4W</p>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <h4 class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">Structural Analysis</h4>
-                        <p class="text-sm text-gray-400 leading-relaxed italic border-l-2 border-amber-500/30 pl-4">
-                            極地冬季觀測重點在於極光垂直構造演化。目前測站周邊面臨建物高度限制與行政法規之不確定性，將於論文中探討其對科學視場遮蔽率之影響。
+                        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">Site Description</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed italic border-l-2 border-blue-500/30 pl-4 mb-6">
+                            位於阿拉斯加 Poker Flat 研究範圍。由 Don Hampton 與 Jason Ahrns 運行，提供極地極光活動的重要觀測資料。
                         </p>
+                        <a href="https://allsky.gi.alaska.edu/" target="_blank" 
+                           class="btn-scan inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono rounded-lg hover:bg-blue-500/20 transition group">
+                            <i class="ri-external-link-line"></i>
+                            UAF ALL-SKY HUB
+                            <i class="ri-arrow-right-up-line opacity-50 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="bg-[#0a1212]/50 p-10 rounded-3xl border border-teal-900/40 monitor-glow">
