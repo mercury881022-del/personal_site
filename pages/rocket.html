@@ -26,39 +26,55 @@
                 <h2 class="text-xl font-bold">CASC 中國航天科技集團 - 發射時程</h2>
             </div>
             <div id="countdown-hero" class="mb-10 hidden">
-                <div class="relative overflow-hidden bg-gradient-to-br from-teal-900/40 to-black p-8 rounded-2xl border border-teal-500/50 shadow-[0_0_30px_rgba(20,184,166,0.15)]">
-                    <div class="absolute top-0 right-0 p-4 opacity-20 text-teal-500 text-6xl">🚀</div>
+                <div class="relative overflow-hidden bg-gradient-to-br from-[#060e14] to-black p-8 rounded-2xl border border-teal-500/50 shadow-[0_0_40px_rgba(20,184,166,0.2)]">
                     
-                    <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div class="text-center md:text-left">
-                            <span class="text-xs font-mono text-teal-400 tracking-widest uppercase">Latest Mission Tracking</span>
-                            <h2 id="hero-payload" class="text-3xl font-bold text-white mt-1">---</h2>
-                            <p id="hero-rocket" class="text-teal-500 font-mono">---</p>
-                            <div class="flex gap-4 mt-4 text-xs text-gray-400">
-                                <span id="hero-site">📍 ---</span>
-                                <span id="hero-orbit">🎯 ---</span>
+                    <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(#14b8a6 1px, transparent 1px), linear-gradient(90#14b8a6 1px, transparent 1px); background-size: 30px 30px;"></div>
+                    
+                    <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
+                        
+                        <div class="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+                            <div class="flex-shrink-0">
+                                <img src="https://rocket-launch-today.s3.us-east-1.amazonaws.com/China_Aerospace_Corporation_8d49a488a1.png" 
+                                    alt="CASC Logo" 
+                                    class="w-20 h-20 rounded-full bg-white object-contain p-2 shadow-[0_0_20px_rgba(255,255,255,0.1)] border-2 border-teal-500/50">
+                            </div>
+                            
+                            <div class="flex-grow">
+                                <div class="flex items-center gap-3 justify-center sm:justify-start">
+                                    <span class="text-xs font-mono text-teal-400 tracking-widest uppercase">Latest CASC Mission Tracking</span>
+                                    <span class="relative flex h-2 w-2">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                    </span>
+                                </div>
+                                <h2 id="hero-payload" class="text-4xl font-bold text-white mt-1 tracking-tight">---</h2>
+                                <p id="hero-rocket" class="text-teal-500 font-mono text-lg">---</p>
+                                <div class="flex gap-5 mt-4 text-xs text-gray-400 justify-center sm:justify-start font-mono">
+                                    <span id="hero-site">📍 ---</span>
+                                    <span id="hero-orbit">🎯 ---</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="bg-black/50 backdrop-blur-sm p-6 rounded-xl border border-teal-500/30 flex gap-4">
+                        <div class="bg-black/60 backdrop-blur-sm p-6 rounded-xl border border-teal-500/30 flex gap-5 shadow-inner">
                             <div class="text-center">
-                                <div id="days" class="text-3xl font-bold text-white">00</div>
-                                <div class="text-[10px] text-teal-500 uppercase">Days</div>
+                                <div id="days" class="text-4xl font-bold text-white font-mono">00</div>
+                                <div class="text-[10px] text-teal-500 uppercase tracking-wider">Days</div>
                             </div>
-                            <div class="text-teal-500 text-3xl font-bold">:</div>
+                            <div class="text-teal-500 text-4xl font-bold animate-pulse">:</div>
                             <div class="text-center">
-                                <div id="hours" class="text-3xl font-bold text-white">00</div>
-                                <div class="text-[10px] text-teal-500 uppercase">Hrs</div>
+                                <div id="hours" class="text-4xl font-bold text-white font-mono">00</div>
+                                <div class="text-[10px] text-teal-500 uppercase tracking-wider">Hrs</div>
                             </div>
-                            <div class="text-teal-500 text-3xl font-bold">:</div>
+                            <div class="text-teal-500 text-4xl font-bold animate-pulse">:</div>
                             <div class="text-center">
-                                <div id="minutes" class="text-3xl font-bold text-white">00</div>
-                                <div class="text-[10px] text-teal-500 uppercase">Min</div>
+                                <div id="minutes" class="text-4xl font-bold text-white font-mono">00</div>
+                                <div class="text-[10px] text-teal-500 uppercase tracking-wider">Min</div>
                             </div>
-                            <div class="text-teal-500 text-3xl font-bold">:</div>
+                            <div class="text-teal-500 text-4xl font-bold animate-pulse">:</div>
                             <div class="text-center">
-                                <div id="seconds" class="text-3xl font-bold text-white">00</div>
-                                <div class="text-[10px] text-teal-500 uppercase">Sec</div>
+                                <div id="seconds" class="text-4xl font-bold text-white font-mono">00</div>
+                                <div class="text-[10px] text-teal-500 uppercase tracking-wider">Sec</div>
                             </div>
                         </div>
                     </div>
