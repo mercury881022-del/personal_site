@@ -197,12 +197,14 @@ function getStatusBadge(time) {
 
 // assets/js/main.js
 
-// --- 6. 影像自動更新邏輯 (全面同步版) ---
+// assets/js/main.js
+
+// --- 6. 影像自動更新邏輯 (全面同步版 - 已更新為 TOO 測站) ---
 function initImagingLogic() {
-    // 1. 各站點的基礎 URL
     const webAppUrl = "https://script.google.com/macros/s/AKfycbxHVefdwt1XABlPMrLags4BOAJop1UNZaVARvR5DnsSzbN9NiYmsusAufet3jEbwpPs/exec";
     const lulinUrl = "https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg";
-    const alaskaUrl = "https://allsky.gi.alaska.edu/TOO/latest-eye.jpg";
+    // 🎯 核心更新：PKR 改為 TOO
+    const tooUrl = "https://allsky.gi.alaska.edu/TOO/latest-eye.jpg";
 
     function updateImages() {
         const now = new Date();
@@ -231,12 +233,13 @@ function initImagingLogic() {
             if (lulinStatus) lulinStatus.innerText = "最後同步: " + timeDisplay;
         }
 
-        // C. 阿拉斯加 (新增：同步更新時間標籤)
-        const alaskaImg = document.getElementById('pokerflat-allsky');
-        const alaskaStatus = document.getElementById('status-alaska');
-        if (alaskaImg) {
-            alaskaImg.src = alaskaUrl + "?t=" + timestamp;
-            if (alaskaStatus) alaskaStatus.innerText = "最後同步: " + timeDisplay;
+        // C. 阿拉斯加 (新增與 PKR 區分：status-too 和 too-allsky)
+        const tooImg = document.getElementById('too-allsky');
+        const tooStatus = document.getElementById('status-too');
+        if (tooImg) {
+            // 強迫瀏覽器抓新圖
+            tooImg.src = tooUrl + "?t=" + timestamp;
+            if (tooStatus) tooStatus.innerText = "最後同步: " + timeDisplay;
         }
     }
 
@@ -247,10 +250,7 @@ function initImagingLogic() {
                now.getSeconds().toString().padStart(2, '0');
     }
 
-    // 啟動後立刻執行一次
     updateImages();
-
-    // 設定定時重整頻率
-    // 研究室建議 10-20 秒一次；鹿林/阿拉斯加建議 60 秒一次避免被封鎖 IP
-    setInterval(updateImages, 30000); // 這裡統一設定 30 秒更新一次
+    // 統一設定 30 秒更新一次
+    setInterval(updateImages, 30000);
 }
