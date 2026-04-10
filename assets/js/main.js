@@ -23,11 +23,15 @@ function renderNavbar() {
     const navPlaceholder = document.getElementById('navbar-placeholder');
     if (!navPlaceholder) return;
 
+    // 定義路徑 - 請確保這些路徑與你的檔案結構一致
     const rootPath = "/index.html";
     const imagingPath = "/pages/imaging.html";
-    const satellitePath = "/pages/satellite.html";
+    const satellitePath = "/pages/satellite.html"; // 你剛剛提供的頁面
     const gpsPath = "/pages/gps.html";
     const rocketPath = "/pages/rocket.html";
+    // 🎯 新增：止盈計算機的路徑 (假設你把它放在 /pages/calc.html)
+    const otherPath = "/pages/calc.html"; 
+
     const logoImg = "https://public.readdy.ai/ai/img_res/f4897f5b-3554-4f1f-8862-12da2085430e.png";
 
     navPlaceholder.innerHTML = `
@@ -43,6 +47,7 @@ function renderNavbar() {
                 <a href="${satellitePath}" class="hover:text-teal-400 transition">衛星掩星</a>
                 <a href="${gpsPath}" class="hover:text-teal-400 transition">GNSS</a>
                 <a href="${rocketPath}" class="hover:text-teal-400 transition">火箭資訊</a>
+                <a href="${otherPath}" class="hover:text-teal-400 transition border-l border-teal-900/50 pl-4">其他</a>
             </div>
         </div>
     </nav>`;
