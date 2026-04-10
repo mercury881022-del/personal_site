@@ -10,6 +10,7 @@
         body { background-color: #060a0d; color: white; font-family: sans-serif; }
         .result-glow { text-shadow: 0 0 15px rgba(20, 184, 166, 0.7); }
         .leverage-glow { text-shadow: 0 0 10px rgba(45, 212, 191, 0.4); }
+        .profit-glow { text-shadow: 0 0 12px rgba(52, 211, 153, 0.5); }
     </style>
 </head>
 <body class="pt-24 px-6">
@@ -33,10 +34,17 @@
                 </h2>
                 
                 <div class="space-y-6">
-                    <div>
-                        <label class="block text-xs font-mono text-teal-500 uppercase tracking-widest mb-2">預計盈利 (%)</label>
-                        <input type="number" id="targetProfit" value="5" 
-                            class="w-full p-4 rounded-lg bg-[#060a0d]/80 border border-teal-900/50 text-teal-300 font-mono text-xl focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono text-teal-500 uppercase tracking-widest mb-2">預計盈利 (%)</label>
+                            <input type="number" id="targetProfit" value="5" 
+                                class="w-full p-4 rounded-lg bg-[#060a0d]/80 border border-teal-900/50 text-teal-300 font-mono text-xl focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-teal-500 uppercase tracking-widest mb-2">倉位大小 (U)</label>
+                            <input type="number" id="positionSize" value="5" 
+                                class="w-full p-4 rounded-lg bg-[#060a0d]/80 border border-teal-900/50 text-teal-300 font-mono text-xl focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition">
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-6">
@@ -54,21 +62,28 @@
                 </div>
             </div>
 
-            <div class="bg-[#0a1212] border border-teal-900/40 rounded-xl p-8 flex flex-col justify-center shadow-[0_0_20px_rgba(20,184,166,0.1)]">
+            <div class="bg-[#0a1212] border border-teal-900/40 rounded-xl p-6 flex flex-col justify-between shadow-[0_0_20px_rgba(20,184,166,0.1)]">
                 
-                <div class="text-center pb-6 border-b border-teal-900/30">
-                    <h3 class="text-emerald-400 font-bold text-xs uppercase tracking-tighter mb-3">建議止盈實盤漲跌幅</h3>
-                    <div id="result" class="text-4xl font-extrabold text-teal-400 font-mono result-glow">
+                <div class="text-center py-4 border-b border-teal-900/20">
+                    <h3 class="text-emerald-400 font-bold text-[10px] uppercase tracking-wider mb-2">建議止盈實盤漲跌幅</h3>
+                    <div id="result" class="text-3xl font-extrabold text-teal-400 font-mono result-glow">
                         -- %
                     </div>
                 </div>
 
-                <div class="text-center pt-6">
-                    <h3 class="text-gray-500 font-bold text-xs uppercase tracking-tighter mb-3">預計總收益 (含槓桿)</h3>
-                    <div id="totalReturn" class="text-2xl font-bold text-emerald-200 font-mono leverage-glow">
+                <div class="text-center py-4 border-b border-teal-900/20">
+                    <h3 class="text-gray-500 font-bold text-[10px] uppercase tracking-wider mb-2">預計總收益 (含槓桿)</h3>
+                    <div id="totalReturnPercent" class="text-xl font-bold text-emerald-200 font-mono leverage-glow">
                         -- %
                     </div>
-                    <p class="text-[9px] text-teal-900/60 mt-4 font-mono uppercase">Calculated with Leverage</p>
+                </div>
+
+                <div class="text-center py-4">
+                    <h3 class="text-emerald-500 font-bold text-[10px] uppercase tracking-wider mb-2">淨獲利金額 (扣除手續費)</h3>
+                    <div id="profitU" class="text-3xl font-black text-emerald-400 font-mono profit-glow">
+                        $ --
+                    </div>
+                    <p class="text-[9px] text-teal-900/60 mt-2 font-mono uppercase tracking-widest">Calculated in USDT</p>
                 </div>
 
             </div>
@@ -80,31 +95,35 @@
     
     <script>
         const targetProfitInput = document.getElementById('targetProfit');
+        const positionSizeInput = document.getElementById('positionSize');
         const leverageInput = document.getElementById('leverage');
         const feeInput = document.getElementById('fee');
+        
         const resultDisplay = document.getElementById('result');
-        const totalReturnDisplay = document.getElementById('totalReturn');
+        const totalReturnDisplay = document.getElementById('totalReturnPercent');
+        const profitUDisplay = document.getElementById('profitU');
 
         function calculate() {
             const target = parseFloat(targetProfitInput.value) || 0;
+            const posSize = parseFloat(positionSizeInput.value) || 0;
             const lev = parseFloat(leverageInput.value) || 0;
             const fee = parseFloat(feeInput.value) || 0;
 
             if (lev > 0) {
-                // 1. 計算實盤漲跌幅
                 const realPercent = (target / lev) + (2 * fee);
                 resultDisplay.innerText = realPercent.toFixed(4) + ' %';
-
-                // 2. 計算總收益 (實盤 % * 槓桿)
                 const totalReturn = realPercent * lev;
                 totalReturnDisplay.innerText = totalReturn.toFixed(2) + ' %';
+                const netProfit = (posSize * target) / 100;
+                profitUDisplay.innerText = '$ ' + netProfit.toFixed(2);
             } else {
                 resultDisplay.innerText = 'NaN';
                 totalReturnDisplay.innerText = 'NaN';
+                profitUDisplay.innerText = '$ --';
             }
         }
 
-        [targetProfitInput, leverageInput, feeInput].forEach(input => {
+        [targetProfitInput, positionSizeInput, leverageInput, feeInput].forEach(input => {
             input.addEventListener('input', calculate);
         });
 
