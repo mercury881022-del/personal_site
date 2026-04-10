@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>太空天氣研究室 | 交易策略計算</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css">
+    <style>
+        body { background-color: #060a0d; color: white; font-family: sans-serif; }
+        /* 專用樣式：讓結果數字有發光感 */
+        .result-glow { text-shadow: 0 0 15px rgba(20, 184, 166, 0.7); }
+    </style>
+</head>
+<body class="pt-24 px-6">
+    <div id="navbar-placeholder"></div>
+
+    <div class="max-w-5xl mx-auto">
+        <div class="relative rounded-2xl overflow-hidden mb-10 h-64 flex items-end p-8 bg-emerald-900/10 border border-emerald-800/40">
+            <img src="https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=1200&auto=format&fit=crop" 
+                 class="absolute inset-0 w-full h-full object-cover opacity-20">
+            <div class="relative z-10">
+                <span class="bg-emerald-900/60 border border-emerald-700/50 text-emerald-300 text-xs px-3 py-1 rounded-full mb-3 inline-block font-mono">Trading Tools</span>
+                <h1 class="text-4xl font-black">止盈策略計算機</h1>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+            
+            <div class="md:col-span-2 bg-[#0a1212] border border-teal-900/30 rounded-xl p-8 shadow-xl">
+                <h2 class="text-emerald-400 font-bold text-lg mb-6 flex items-center gap-2">
+                    <i class="ri-settings-4-line"></i> 策略參數設定
+                </h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-xs font-mono text-teal-500 uppercase tracking-widest mb-2">預計盈利 (%)</label>
+                        <input type="number" id="targetProfit" value="5" placeholder="例如: 5"
+                            class="w-full p-4 rounded-lg bg-[#060a0d]/80 border border-teal-900/50 text-teal-300 font-mono text-xl focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">槓桿倍數 (x)</label>
+                            <input type="number" id="leverage" value="10" placeholder="例如: 10"
+                                class="w-full p-4 rounded-lg bg-[#060a0d]/80 border border-teal-900/50 text-gray-300 font-mono focus:outline-none focus:border-teal-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-2">單邊手續費 (%)</label>
+                            <input type="number" id="fee" value="0.05" step="0.01" placeholder="例如: 0.05"
+                                class="w-full p-4 rounded-lg bg-[#060a0d]/80 border border-teal-900/50 text-gray-300 font-mono focus:outline-none focus:border-teal-500 transition">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#0a1212] border border-teal-900/40 rounded-xl p-8 flex flex-col justify-center items-center text-center shadow-[0_0_20px_rgba(20,184,166,0.1)] hover:border-teal-500/50 transition-all group">
+                <h3 class="text-emerald-400 font-bold text-base mb-4">建議止盈實盤漲跌幅</h3>
+                
+                <div id="result" class="text-5xl font-extrabold text-teal-400 font-mono result-glow animate-pulse">
+                    -- %
+                </div>
+                
+                <p class="text-xs text-gray-500 mt-6 leading-relaxed bg-[#060a0d] p-3 rounded-md border border-teal-900/30 font-mono">
+                    Formula: (Profit / Lev) + (2 * Fee)
+                </p>
+                <span class="text-[10px] text-teal-900 mt-4 font-mono uppercase tracking-widest">System Ready</span>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="/assets/js/main.js"></script>
+    
+    <script>
+        const targetProfitInput = document.getElementById('targetProfit');
+        const leverageInput = document.getElementById('leverage');
+        const feeInput = document.getElementById('fee');
+        const resultDisplay = document.getElementById('result');
+
+        function calculate() {
+            // 獲取輸入值，如果為空則設為 0
+            const target = parseFloat(targetProfitInput.value) || 0;
+            const lev = parseFloat(leverageInput.value) || 0;
+            const fee = parseFloat(feeInput.value) || 0;
+
+            // 槓桿必須大於 0 才能計算
+            if (lev > 0) {
+                // 公式: (預計盈利 / 槓桿) + (2 * 單邊手續費)
+                // 這裡假設手續費輸入的是百分比數字(如 0.05 代表 0.05%)
+                const realPercent = (target / lev) + (2 * fee);
+                // 顯示結果，保留四位小數
+                resultDisplay.innerText = realPercent.toFixed(4) + ' %';
+            } else {
+                resultDisplay.innerText = 'NaN';
+            }
+        }
+
+        // 監聽所有輸入框的輸入事件，達成即時計算
+        [targetProfitInput, leverageInput, feeInput].forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // 頁面載入時先計算一次
+        calculate();
+    </script>
+</body>
+</html>
