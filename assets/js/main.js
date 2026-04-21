@@ -204,33 +204,29 @@ function getStatusBadge(time) {
 
 // assets/js/main.js
 
-// --- 6. 影像自動更新邏輯 (全面同步版 - 已更新為 TOO 測站) ---
+// assets/js/main.js
+
+// --- 6. 影像自動更新邏輯 (全面同步 - 直接讀取 URL 版) ---
 function initImagingLogic() {
-    const webAppUrl = "https://script.google.com/macros/s/AKfycbxHVefdwt1XABlPMrLags4BOAJop1UNZaVARvR5DnsSzbN9NiYmsusAufet3jEbwpPs/exec";
+    // 1. 各站點的基礎 URL
+    const irslUrl = "https://irsl.ss.ncu.edu.tw/media/product/Allsky/Allsky_latest.jpg";
     const lulinUrl = "https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg";
-    // 🎯 核心更新：PKR 改為 TOO
     const tooUrl = "https://allsky.gi.alaska.edu/TOO/latest-eye.jpg";
 
     function updateImages() {
         const now = new Date();
-        const timestamp = now.getTime();
+        const timestamp = now.getTime(); // 產生唯一數字，強迫瀏覽器抓新圖
         const timeDisplay = getNowTime();
 
-        // A. 研究室
+        // --- A. IRSL 研究室 (Station A) - 改為直接讀取 URL ---
         const liveImg = document.getElementById('live-image');
         const liveStatus = document.getElementById('status-live');
         if (liveImg) {
-            fetch(webAppUrl + "?t=" + timestamp)
-                .then(res => res.text())
-                .then(base64 => {
-                    if (!base64.startsWith("Error")) {
-                        liveImg.src = "data:image/jpeg;base64," + base64;
-                        if (liveStatus) liveStatus.innerText = "最後同步: " + timeDisplay;
-                    }
-                });
+            liveImg.src = irslUrl + "?t=" + timestamp;
+            if (liveStatus) liveStatus.innerText = "最後同步: " + timeDisplay;
         }
 
-        // B. 鹿林
+        // --- B. 鹿林天文台 (Station B) ---
         const lulinImg = document.getElementById('lulin-allsky');
         const lulinStatus = document.getElementById('status-lulin');
         if (lulinImg) {
@@ -238,14 +234,15 @@ function initImagingLogic() {
             if (lulinStatus) lulinStatus.innerText = "最後同步: " + timeDisplay;
         }
 
-        // C. 阿拉斯加 (新增與 PKR 區分：status-too 和 too-allsky)
+        // --- C. Alaska TOO 測站 ---
         const tooImg = document.getElementById('too-allsky');
         const tooStatus = document.getElementById('status-too');
         if (tooImg) {
-            // 強迫瀏覽器抓新圖
             tooImg.src = tooUrl + "?t=" + timestamp;
             if (tooStatus) tooStatus.innerText = "最後同步: " + timeDisplay;
         }
+        
+        console.log(`✨ 全域影像同步完成 @ ${timeDisplay}`);
     }
 
     function getNowTime() {
@@ -255,7 +252,9 @@ function initImagingLogic() {
                now.getSeconds().toString().padStart(2, '0');
     }
 
+    // 啟動後立刻執行一次
     updateImages();
-    // 統一設定 30 秒更新一次
+
+    // 每 30 秒自動重新抓取最新的觀測圖
     setInterval(updateImages, 30000);
 }
