@@ -211,7 +211,7 @@ function initImagingLogic() {
     // 1. 各站點的基礎 URL
     const irslUrl = "https://irsl.ss.ncu.edu.tw/media/product/Allsky/Allsky_latest.jpg";
     const lulinUrl = "https://www.lulin.ncu.edu.tw/static/weather/img/allsky.jpg";
-    const tooUrl = "https://allsky.gi.alaska.edu/TOO/latest-eye.jpg";
+    const tooUrl = "https://unisacsi.com/allsky.jpg";
 
     function updateImages() {
         const now = new Date();
